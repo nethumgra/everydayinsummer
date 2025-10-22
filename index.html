@@ -6,6 +6,7 @@
     <title>Everyday In Summer Sri Lanka | Home</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
     <script>
     tailwind.config = {
@@ -53,7 +54,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
-    
+   
     <style>
         /* SVG Map Styling */
         #sri-lanka-map path {
@@ -93,12 +94,422 @@
          #main-header.scrolled .nav-links a {
             color: #F7FAFC; /* brand-white */
         }
+        
+        /* Swiper Custom Styles */
+.swiper-pagination-bullet-active {
+  background-color: #F97316 !important; /* brand-orange */
+}
+.swiper-button-next,
+.swiper-button-prev {
+  color: #F97316 !important; /* brand-orange */
+  transform: scale(0.7); /* Arrow size podi karanna */
+}
+.swiper-slide {
+    height: auto; 
+}
+/* YouTube Full Cover Trick (Perahera, Ella & Beaches) */
+#perahera-youtube-video-container,
+#ella-youtube-video-container,
+#beach-youtube-video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+#perahera-youtube-video,
+#ella-youtube-video,
+#beach-youtube-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 105%;
+  min-height: 105%;
+  width: auto;
+  height: auto;
+}
+/* ===== Slider Attention Animation ===== */
+@keyframes pulse-shadow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); /* brand-orange 40% opacity */
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); /* fade out */
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
+    }
+}
+
+.tour-packages-slider {
+    /* Animation eka slider ekata apply kireema */
+    animation: pulse-shadow 2.5s infinite;
+}
+
+/* User mouse eka slider eka uda thiyaddi animation eka nawaththamu */
+.tour-packages-slider:hover {
+    animation: none;
+}
+        
 
     </style>
 
 </head>
+
+
 <body class="bg-brand-white font-body text-brand-dark">
 
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  var swiper = new Swiper('.tour-packages-slider', {
+    // Optional parameters
+    loop: true,
+    
+    // Autoplay eka ain karala thiyenne manual karanna.
+    // Eka onenam, me comment eka ain karala use karanna puluwan:
+    /*
+    autoplay: {
+      delay: 5000, // Thappara 5kata sarayak maru wenna
+      disableOnInteraction: false,
+    },
+    */
+
+    autoHeight: true, // Content ekata anuwa height eka wenas wenna
+    grabCursor: true, // <-- Manual adinna puluwan kiyala pennanna cursor eka maru karanawa
+
+    // Pagination (Dots)
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+
+    // Navigation arrows (Meva thamai oya illapu manual slide icons)
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+  });
+});
+</script>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+    // === YouTube IFrame Player API Scripts (Combined - Improved Ready Check) ===
+    var players = {
+        hero: { player: null, ready: false, sectionVisible: true, sectionId: 'hero-section', elementId: 'hero-youtube-video', hasPlayedOnce: false, observerSetup: false },
+        ella: { player: null, ready: false, sectionVisible: false, sectionId: 'ella-beauty', elementId: 'ella-youtube-video', hasPlayedOnce: false, observerSetup: false },
+        perahera: { player: null, ready: false, sectionVisible: false, sectionId: 'perahera-youtube', elementId: 'perahera-youtube-video', hasPlayedOnce: false, observerSetup: false },
+        beach: { player: null, ready: false, sectionVisible: false, sectionId: 'beaches-youtube', elementId: 'beach-youtube-video', hasPlayedOnce: false, observerSetup: false },
+        religion: { player: null, ready: false, sectionVisible: false, sectionId: 'religions', elementId: 'religion-youtube-video', hasPlayedOnce: false, observerSetup: false, currentVideoIndex: 0 }
+    };
+
+    var apiReady = false;
+    var userInteracted = false;
+
+    // Helper function to update sound icons generically (No changes here)
+    function updateGenericSoundIcon(playerKey, isMuted) {
+        const buttonId = `sound-toggle-btn${playerKey === 'hero' ? '' : '-' + playerKey}`;
+        const button = document.getElementById(buttonId);
+        if (button) {
+            const mutedIconId = button.querySelector('svg[id^="icon-muted"]')?.id;
+            const unmutedIconId = button.querySelector('svg[id^="icon-unmuted"]')?.id;
+            if (mutedIconId && unmutedIconId) {
+                const mutedIcon = document.getElementById(mutedIconId);
+                const unmutedIcon = document.getElementById(unmutedIconId);
+                if (mutedIcon && unmutedIcon) {
+                    if (isMuted) {
+                        mutedIcon.classList.remove('hidden');
+                        unmutedIcon.classList.add('hidden');
+                    } else {
+                        mutedIcon.classList.add('hidden');
+                        unmutedIcon.classList.remove('hidden');
+                    }
+                } else { console.warn(`Icons not found within button ${buttonId}`); }
+            } else { console.warn(`Could not find icon IDs within button ${buttonId}`); }
+        }
+    }
+
+    // handleUserInteraction (No changes here)
+    function handleUserInteraction() {
+        if (!userInteracted) {
+            console.log("User interaction detected.");
+            userInteracted = true;
+            Object.keys(players).forEach(playerKey => {
+                const config = players[playerKey];
+                if (config.ready && config.sectionVisible && config.player && typeof config.player.unMute === 'function') {
+                    console.log(`Attempting to unmute ${playerKey} (visible).`);
+                    try {
+                        config.player.unMute();
+                        updateGenericSoundIcon(playerKey, false);
+                    } catch (e) { console.error(`Error unmuting ${playerKey}:`, e); }
+                } else if (config.ready && !config.sectionVisible && config.player && typeof config.player.mute === 'function') {
+                    console.log(`Ensuring ${playerKey} muted (not visible).`);
+                     try {
+                        config.player.mute();
+                        updateGenericSoundIcon(playerKey, true);
+                     } catch (e) { console.error(`Error muting ${playerKey}:`, e); }
+                }
+            });
+        }
+    }
+
+    // DOMContentLoaded listener (No changes here)
+    document.addEventListener('DOMContentLoaded', () => {
+       document.body.addEventListener('click', handleUserInteraction, { once: true });
+       console.log("DOM fully loaded. Initializing players check.");
+       initPlayersIfReady();
+    });
+
+    // onYouTubeIframeAPIReady (No changes here)
+    function onYouTubeIframeAPIReady() {
+        console.log("YouTube API Ready.");
+        apiReady = true;
+        initPlayersIfReady();
+    }
+
+    // === 👇 initPlayersIfReady with SPECIFIC LOGGING for 'religion' 👇 ===
+    function initPlayersIfReady() {
+        if (!apiReady || (document.readyState !== 'interactive' && document.readyState !== 'complete')) {
+            console.log(`API Ready: ${apiReady}, DOM State: ${document.readyState}. Waiting...`);
+             if (apiReady && document.readyState === 'loading') { return; }
+             if (!apiReady && (document.readyState === 'interactive' || document.readyState === 'complete')) { return; }
+            return;
+        }
+
+        console.log("DOM ready and API ready. Initializing players.");
+        Object.keys(players).forEach(playerKey => {
+            const config = players[playerKey];
+            const element = document.getElementById(config.elementId);
+            if (!config.player && element) {
+                console.log(`Creating ${playerKey} Player.`);
+                try {
+                     // Define specific event handlers for debugging religion player
+                     let playerEvents = {
+                         'onReady': (event) => onPlayerReady(event, playerKey),
+                         // Pass playerKey to error handler
+                         'onError': (event) => onPlayerError(event, playerKey)
+                     };
+
+                     // === Add specific logging for religion player inside its handlers ===
+                     if (playerKey === 'religion') {
+                         console.log(`Attaching specific listeners for ${playerKey}`);
+                         playerEvents = {
+                             'onReady': (event) => {
+                                 console.log("%c>>>> RELIGION PLAYER: onReady event fired! <<<<", "color: green; font-weight: bold;"); // Specific log
+                                 onPlayerReady(event, playerKey); // Call the main handler
+                             },
+                             'onError': (event) => {
+                                 console.error(`%c>>>> RELIGION PLAYER: onError event fired! Data: ${event.data} <<<<`, "color: red; font-weight: bold;"); // Specific log
+                                 onPlayerError(event, playerKey); // Call the main handler
+                             }
+                         };
+                     }
+                     // === End specific logging setup ===
+
+                     // Create the player with potentially specific handlers
+                     config.player = new YT.Player(config.elementId, {
+                         events: playerEvents
+                     });
+                     console.log(`YT.Player constructor called for ${playerKey}`); // Log constructor call
+
+                } catch(e) { console.error(`Error creating YT Player for ${playerKey}: `, e); }
+            } else if (!element) { console.warn(`Element with ID '${config.elementId}' not found for player '${playerKey}'.`); }
+              else if (config.player) { /* console.log(`Player ${playerKey} already exists.`); */ } // Optional log
+        });
+    }
+    // === 👆 End initPlayersIfReady ===
+
+    // onPlayerReady (No changes needed from previous version)
+    function onPlayerReady(event, playerKey) {
+        console.log(`${playerKey} Player Ready.`); // This log should now appear for religion too if it works
+         if(!players[playerKey]) { console.error(`Player config for ${playerKey} not found.`); return; }
+        const config = players[playerKey];
+        config.ready = true;
+        if(event.target && typeof event.target.mute === 'function') {
+            try { event.target.mute(); } catch (e) { console.error(`Error muting ${playerKey} on ready:`, e); }
+        } else { console.warn(`Could not mute ${playerKey} on ready.`); }
+        if (playerKey === 'hero') { /* ... Hero overlay logic ... */ } // Keep Hero logic
+         // --- HERO OVERLAY LOGIC START ---
+         if (playerKey === 'hero') {
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            let isSequenceTriggered = false; // Local flag for hero sequence
+            const checkHeroTime = () => { /* ... Keep the detailed hero time check logic ... */
+                const player = config.player;
+                if (!player || typeof player.getCurrentTime !== 'function' || typeof player.getDuration !== 'function' || typeof player.getPlayerState !== 'function') {
+                    console.warn(`Hero player functions not ready for time check. Retrying soon.`);
+                    return;
+                }
+                try {
+                    const currentTime = player.getCurrentTime();
+                    const duration = player.getDuration();
+                     if (player.getPlayerState() !== YT.PlayerState.PLAYING) { return; }
+                    if (!isSequenceTriggered && duration > 0 && currentTime > 1 && currentTime >= duration - 3) {
+                        console.log("Hero video near end, triggering sequence.");
+                        isSequenceTriggered = true;
+                        if (typeof player.pauseVideo === 'function') player.pauseVideo();
+                        if (welcomeOverlay) welcomeOverlay.classList.add('visible');
+                        setTimeout(() => {
+                            if (welcomeOverlay) welcomeOverlay.classList.remove('visible');
+                            setTimeout(() => {
+                                const nextSection = document.getElementById('sri-lankan-hospitality');
+                                if (nextSection) nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }, 500);
+                        }, 10000);
+                    } else if (!isSequenceTriggered && duration > 0) {
+                        requestAnimationFrame(checkHeroTime);
+                    }
+                } catch (e) { console.error("Error during hero time check:", e); }
+            };
+            const startTimeChecker = () => { /* ... Keep the detailed hero start check logic ... */
+                 if (config.player && typeof config.player.getPlayerState === 'function') {
+                     try {
+                        if (config.player.getPlayerState() === YT.PlayerState.PLAYING && !isSequenceTriggered) {
+                            console.log("Hero video is playing, starting time check.");
+                            requestAnimationFrame(checkHeroTime);
+                        }
+                     } catch (e) { console.error("Error checking hero player state:", e); }
+                 } else { console.warn("Hero player or getPlayerState not ready for startTimeChecker."); }
+            }
+             if (config.player && typeof config.player.addEventListener === 'function') {
+                 const playStateListener = (event) => { /* ... Keep the detailed hero listener logic ... */
+                     try {
+                        if (event.data === YT.PlayerState.PLAYING && !isSequenceTriggered) { startTimeChecker(); }
+                     } catch (e) { console.error("Error in hero playStateListener:", e); }
+                 };
+                 try {
+                    config.player.addEventListener('onStateChange', playStateListener);
+                    setTimeout(startTimeChecker, 500);
+                 } catch (e) { console.error("Error adding hero state change listener:", e); }
+             } else { console.warn("Hero player or addEventListener not ready on time."); }
+        }
+        // --- HERO OVERLAY LOGIC END ---
+        setupIntersectionObserver(playerKey);
+    }
+
+    // === 👇 onPlayerError MODIFIED to accept playerKey 👇 ===
+    function onPlayerError(event, playerKey = 'Unknown') { // Added playerKey parameter
+        let playerId = 'Unknown Player Iframe';
+         try {
+             const iframe = event.target.getIframe();
+             if (iframe) {
+                 playerId = iframe.id || `Iframe for ${playerKey}`;
+             } else {
+                 playerId = `Player object for ${playerKey} (no iframe?)`;
+             }
+         } catch(e) {
+             playerId = `Player ${playerKey} (error getting iframe)`;
+             // console.error("Error accessing iframe in onPlayerError:", e); // Less verbose
+         }
+        // Log different error codes with more meaning
+        let errorMsg = `Youtubeer Error: [Player Key: ${playerKey}] [Iframe ID/Context: ${playerId}] Data: ${event.data}`;
+        switch (event.data) {
+            case 2: errorMsg += " (Invalid parameter)"; break;
+            case 5: errorMsg += " (HTML5 player error)"; break;
+            case 100: errorMsg += " (Video not found)"; break;
+            case 101:
+            case 150: errorMsg += " (Playback forbidden)"; break;
+            default: errorMsg += " (Unknown error code)";
+        }
+        console.error(errorMsg);
+        // Maybe hide the specific player's section or show a fallback?
+        const section = document.getElementById(players[playerKey]?.sectionId);
+        // if (section) section.style.display = 'none'; // Example: Hide section on error
+    }
+     // === 👆 End onPlayerError ===
+
+
+    // setupIntersectionObserver (No changes here)
+    function setupIntersectionObserver(playerKey) {
+         if(!players[playerKey]) { console.error(`Player config ${playerKey} not found.`); return; }
+        const config = players[playerKey];
+        if (config.observerSetup) return;
+        const section = document.getElementById(config.sectionId);
+        if (!section) { console.warn(`Section #${config.sectionId} not found.`); return; }
+        const observerOptions = { threshold: 0.5 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const wasVisible = config.sectionVisible;
+                config.sectionVisible = entry.isIntersecting;
+                controlPlayerBasedOnVisibility(playerKey, config.sectionVisible);
+                if (!wasVisible && config.sectionVisible && userInteracted && config.player && typeof config.player.unMute === 'function') {
+                    console.log(`Observer: Unmuting ${playerKey} (became visible).`);
+                     try {
+                        config.player.unMute();
+                        updateGenericSoundIcon(playerKey, false);
+                     } catch (e) { console.error(`Error unmuting ${playerKey} in observer:`, e); }
+                }
+                else if (wasVisible && !config.sectionVisible && userInteracted && config.player && typeof config.player.mute === 'function') {
+                     console.log(`Observer: Muting ${playerKey} (became hidden).`);
+                     try {
+                        config.player.mute();
+                        updateGenericSoundIcon(playerKey, true);
+                     } catch (e) { console.error(`Error muting ${playerKey} in observer:`, e); }
+                 }
+            });
+        }, observerOptions);
+        observer.observe(section);
+        config.observerSetup = true;
+        console.log(`Observer started for #${config.sectionId}`);
+        requestAnimationFrame(() => { /* ... Initial check logic ... */
+             try {
+                  const rect = section.getBoundingClientRect();
+                  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                  const topVisible = Math.max(0, rect.top);
+                  const bottomVisible = Math.min(viewportHeight, rect.bottom);
+                  const visibleHeight = Math.max(0, bottomVisible - topVisible);
+                  const intersectionRatio = rect.height > 0 ? visibleHeight / rect.height : 0;
+                  if (rect.height > 0 && intersectionRatio >= observerOptions.threshold) {
+                      console.log(`Section ${config.sectionId} initially intersecting.`);
+                      if (!config.sectionVisible) {
+                           config.sectionVisible = true;
+                           controlPlayerBasedOnVisibility(playerKey, true);
+                      }
+                      if (userInteracted && config.ready && config.player && typeof config.player.unMute === 'function') {
+                            console.log(`Initial unmute check ${playerKey} passed.`);
+                             try {
+                                config.player.unMute();
+                                updateGenericSoundIcon(playerKey, false);
+                             } catch (e) { console.error(`Error initial unmute ${playerKey}:`, e); }
+                      }
+                  } else { config.sectionVisible = false; }
+             } catch (e) { console.error("Error initial check:", playerKey, e); }
+        });
+    }
+
+    // controlPlayerBasedOnVisibility (No changes needed from previous version)
+    function controlPlayerBasedOnVisibility(playerKey, isIntersecting) {
+         if(!players[playerKey]) { console.error(`Player config ${playerKey} not found.`); return; }
+        const config = players[playerKey];
+        if (!config.ready || !config.player || typeof config.player.playVideo !== 'function' || typeof config.player.pauseVideo !== 'function') { return; }
+        if (isIntersecting) {
+            try { config.player.playVideo(); config.hasPlayedOnce = true; } catch (e) { console.error(`Error playing ${playerKey}:`, e); }
+            if (userInteracted && typeof config.player.unMute === 'function') {
+                 try { if (typeof config.player.isMuted === 'function' && config.player.isMuted()) { console.log(`Control: Unmuting ${playerKey}.`); config.player.unMute(); updateGenericSoundIcon(playerKey, false); } else { updateGenericSoundIcon(playerKey, false); } } catch (e) { console.error(`Error unmuting ${playerKey} in control:`, e); }
+            } else if (!userInteracted && config.hasPlayedOnce && typeof config.player.mute === 'function') {
+                try { if (typeof config.player.isMuted !== 'function' || !config.player.isMuted()){ console.log(`Control: Muting ${playerKey}.`); config.player.mute(); updateGenericSoundIcon(playerKey, true); } else { updateGenericSoundIcon(playerKey, true); } } catch (e) { console.error(`Error muting ${playerKey} in control:`, e); }
+            }
+        } else {
+            if (config.hasPlayedOnce && typeof config.player.pauseVideo === 'function') {
+                try { if (typeof config.player.getPlayerState === 'function' && config.player.getPlayerState() === YT.PlayerState.PLAYING) { console.log(`Control: Pausing ${playerKey}.`); config.player.pauseVideo(); } } catch (e) { console.error(`Error pausing ${playerKey}:`, e); }
+            }
+             if (config.ready && userInteracted) { updateGenericSoundIcon(playerKey, true); }
+        }
+    }
+
+</script>
+    <script>
+       document.addEventListener('DOMContentLoaded', () => {
+           // ... Floating panel code okkoma me athule ...
+            const openBtn = document.getElementById('open-packages-panel');
+            // ... rest of panel code ...
+       });
+    </script>
 
 <div id="preloader" class="fixed inset-0 bg-white z-[10000] flex flex-col items-center justify-center transition-opacity duration-700 opacity-100">
     
@@ -117,107 +528,65 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // --- FLOATING WINDOW ELEMENTS ---
-    const openBtn = document.getElementById('open-packages-panel');
-    const panel = document.getElementById('packages-panel');
-    const closeBtn = document.getElementById('close-packages-panel');
-    let packageInterval = null; 
+    // --- PRELOADER ELEMENTS ---
+    const preloader = document.getElementById('preloader');
+    const heroVideo = document.getElementById('hero-video');
 
-    // --- PRELOADER ELEMENTS ---
-    const preloader = document.getElementById('preloader');
-    const heroVideo = document.getElementById('hero-video');
+    // --- PRELOADER STATE FLAGS ---
+    let isVideoLoaded = false;
+    let isAnimationComplete = false;
 
-    // --- PRELOADER STATE FLAGS ---
-    let isVideoLoaded = false;
-    let isAnimationComplete = false;
-    
-    // --- FLOATING WINDOW LOGIC (SAME) ---
-    function openPanel() {
-        openBtn.style.display = 'none'; 
-        panel.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
-        panel.classList.add('opacity-100', 'pointer-events-auto'); 
-        document.body.style.overflow = 'hidden'; 
-    }
-    function closePanel() {
-        document.body.classList.add('animate-shake'); 
-        panel.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
-        panel.classList.remove('opacity-100', 'pointer-events-auto');
-        setTimeout(() => {
-            document.body.classList.remove('animate-shake'); 
-            openBtn.style.display = 'flex'; 
-            document.body.style.overflow = ''; 
-        }, 500); 
-    }
-    function scheduleNextOpen() {
-        openPanel();
-        const closeTimeout = setTimeout(() => {
-            closePanel();
-        }, 2000); 
-        packageInterval = setTimeout(scheduleNextOpen, 8000); 
-    }
-    function startLoop() {
-        if (packageInterval) return; 
-        setTimeout(scheduleNextOpen, 3000); 
-    }
-    openBtn.addEventListener('click', () => {
-        if (packageInterval) { clearTimeout(packageInterval); packageInterval = null; }
-        openPanel();
-    });
-    closeBtn.addEventListener('click', () => {
-        if (packageInterval) { clearTimeout(packageInterval); packageInterval = null; }
-        closePanel();
-    });
+    // --- CONDITIONAL PRELOADER LOGIC ---
+    function attemptToHidePreloader() {
+        if (isVideoLoaded && isAnimationComplete && preloader && preloader.style.opacity !== '0') {
+            preloader.style.opacity = '0';
+            setTimeout(() => {
+                preloader.style.display = 'none';
+                document.body.style.overflow = '';
+                if (heroVideo && heroVideo.paused) {
+                    heroVideo.play().catch(error => {
+                        console.log("Video Playback failed:", error);
+                    });
+                }
+                // Panel eka open karana "startLoop()" function eka methanin ain kara
+                // Eka page eke pahala script eka handle karai
+            }, 700);
+        }
+    }
 
-    // --- CONDITIONAL PRELOADER LOGIC ---
-    function attemptToHidePreloader() {
-        if (isVideoLoaded && isAnimationComplete && preloader && preloader.style.opacity !== '0') {
-            preloader.style.opacity = '0';
-            setTimeout(() => {
-                preloader.style.display = 'none';
-                document.body.style.overflow = '';
-                if (heroVideo && heroVideo.paused) {
-                    heroVideo.play().catch(error => {
-                        console.log("Video Playback failed:", error);
-                    });
-                }
-                startLoop();
-            }, 700);
-        }
-    }
+    function onVideoLoadComplete() {
+        if (!isVideoLoaded) {
+            isVideoLoaded = true;
+            if (heroVideo) {
+                heroVideo.pause();
+            }
+            attemptToHidePreloader();
+        }
+    }
 
-    function onVideoLoadComplete() {
-        if (!isVideoLoaded) {
-            isVideoLoaded = true;
-            if (heroVideo) {
-                heroVideo.pause();
-            }
-            attemptToHidePreloader();
-        }
-    }
+    function onAnimationComplete() {
+        if (!isAnimationComplete) {
+            isAnimationComplete = true;
+            attemptToHidePreloader();
+        }
+    }
+    
+    // --- SIMPLIFIED Loading Animation Logic ---
+    function startLoaderAnimation() {
+        // We just set a minimum time for the preloader to be visible.
+        // This ensures the logo animation plays for a few seconds.
+        setTimeout(onAnimationComplete, 3000); // Wait 3 seconds
+    }
 
-    function onAnimationComplete() {
-        if (!isAnimationComplete) {
-            isAnimationComplete = true;
-            attemptToHidePreloader();
-        }
-    }
-    
-    // --- SIMPLIFIED Loading Animation Logic ---
-    function startLoaderAnimation() {
-        // We just set a minimum time for the preloader to be visible.
-        // This ensures the logo animation plays for a few seconds.
-        setTimeout(onAnimationComplete, 3000); // Wait 3 seconds
-    }
+    // --- INITIALIZATION ---
+    if (heroVideo) {
+         heroVideo.onloadeddata = onVideoLoadComplete;
+    }
+    // Safety fallback in case the video fails to load
+    setTimeout(onVideoLoadComplete, 8000); 
 
-    // --- INITIALIZATION ---
-    if (heroVideo) {
-         heroVideo.onloadeddata = onVideoLoadComplete;
-    }
-    // Safety fallback in case the video fails to load
-    setTimeout(onVideoLoadComplete, 8000); 
-
-    // Start the visual animation timer
-    startLoaderAnimation();
+    // Start the visual animation timer
+    startLoaderAnimation();
 });
 </script>
 
@@ -231,6 +600,7 @@ document.addEventListener('DOMContentLoaded', () => {
         to { width: 100%; }
     }
 </style>
+
 
 
 <header id="main-header" class="fixed w-full top-0 z-50 transition-all duration-300">
@@ -275,18 +645,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     <main>
 <section id="hero-section" class="relative h-[60vh] md:h-screen flex items-center justify-center overflow-hidden">
-<video 
-    id="hero-video" 
-    autoplay 
-    playsinline 
-    class="absolute w-full h-full object-cover"
-    >
-    <source src="final.mp4" type="video/mp4" />
-</video>
 
-    <div id="welcome-overlay" class="absolute inset-0 flex items-center justify-center z-30 opacity-0 transition-all duration-500 ease-in-out transform scale-90">
-        <div class="text-center text-white p-8 bg-black/30 backdrop-blur-md rounded-lg max-w-3xl mx-4">
-            <h1 class="font-display text-5xl md:text-7xl font-bold drop-shadow-lg">Welcome to Sri Lanka</h1>
+    <div id="hero-youtube-video-container" class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+        <iframe
+            id="hero-youtube-video"
+            src="https://www.youtube.com/embed/fOmMCwLmcFU?enablejsapi=1&loop=1&playlist=fOmMCwLmcFU&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&autoplay=1&mute=1"
+            title="Hero Video Sri Lanka"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <div class="absolute inset-0 bg-black bg-opacity-30 z-10"></div> <div id="welcome-overlay" class="absolute inset-0 flex items-center justify-center z-30 opacity-0 transition-all duration-500 ease-in-out transform scale-90">
+        <div class="text-center text-white p-8 bg-black/40 backdrop-blur-md rounded-lg max-w-3xl mx-4"> <h1 class="font-display text-5xl md:text-7xl font-bold drop-shadow-lg">Welcome to Sri Lanka</h1>
             <p class="font-body text-lg md:text-xl mt-4 text-gray-200 drop-shadow-lg">
                 Welcome to the Pearl of the Indian Ocean, a land where ancient kingdoms rise from jungle plains and sacred temples touch the clouds. Here, golden beaches meet turquoise waters, lush tea estates blanket misty mountains, and the call of exotic wildlife echoes through dense rainforests. Immerse yourself in a vibrant culture, savor the warmth of our hospitality, and let your unforgettable journey begin.
             </p>
@@ -296,14 +668,44 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="absolute bottom-5 right-5 z-40">
         <button id="sound-toggle-btn" class="bg-black/30 backdrop-blur-sm rounded-full p-3 text-white hover:bg-black/50 transition-colors">
             <svg id="icon-muted" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75v.001M15 12v.001M12.75 14.25v.001M10.5 16.5v.001M4.5 12.75a7.5 7.5 0 0115 0v.001M4.5 12.75a7.5 7.5 0 0015 0v.001M12 18.75v.001M18.364 5.636l-.707.707a7.5 7.5 0 010 10.607l.707.707M5.636 5.636l.707.707a7.5 7.5 0 000 10.607l-.707.707M15 5.25a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008zm-6 0a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v-.008z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75v.001M15 12v.001M12.75 14.25v.001M10.5 16.5v.001M4.5 12.75a7.5 7.5 0 0115 0v.001M4.5 12.75a7.5 7.5 0 0015 0v.001M12 18.75v.001M18.364 5.636l-.707.707a7.5 7.5 0 010 10.607l.707.707M5.636 5.636l.707.707a7.5 7.5 0 000 10.607l-.707.707M15 5.25a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008zm-6 0a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v-.008z" />
             </svg>
             <svg id="icon-unmuted" class="w-6 h-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
             </svg>
         </button>
     </div>
 </section>
+
+<style>
+/* YouTube Full Cover Trick for Hero */
+#hero-youtube-video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Important! */
+  z-index: 0;
+}
+
+#hero-youtube-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 178vh; /* Scale width based on height */
+  min-width: 100%;
+  height: 100vw; /* Scale height based on width */
+  min-height: 100%;
+  transform: translate(-50%, -50%); /* Center */
+}
+
+/* Welcome Overlay Visibility Style */
+#welcome-overlay.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+</style>
 
 <style>
     #welcome-overlay.visible {
@@ -500,123 +902,41 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <section id="religions" class="relative h-[60vh] md:h-screen flex items-center overflow-hidden">
-    <video id="religion-video" playsinline muted autoplay class="absolute top-0 left-0 w-full h-full object-cover z-0">
-        </video>
+    <div id="religion-youtube-video-container" class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+  <iframe
+    id="religion-youtube-video"
+    class="absolute top-1/2 left-1/2 w-[178vh] min-w-full h-[100vw] min-h-full transform -translate-x-1/2 -translate-y-1/2"
+    src="https://www.youtube.com/embed/u6RrLO2n1iE?enablejsapi=1&loop=1&playlist=u6RrLO2n1iE&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&autoplay=1&mute=1" 
+    title="Sri Lankan Culture" frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen>
+</iframe>
+    </div>
     <div class="absolute inset-0 bg-black/50 z-10"></div>
 
     <div class="relative container mx-auto px-4 z-20 h-full">
-        <div id="religion-content" class="absolute top-16 right-4 md:right-16 max-w-md text-right text-white transition-opacity duration-700 ease-in-out opacity-0">
-            <p class="text-lg font-bold text-brand-orange tracking-widest uppercase mb-2">Major Religions</p>
-            <h3 id="religion-name" class="text-5xl lg:text-6xl font-display font-bold mb-4"></h3>
-            <p id="religion-description" class="text-lg text-gray-200 leading-relaxed"></p>
+
+        <div class="absolute top-16 left-4 md:left-16">
+            <img src="https://i.ibb.co/pr9BB797/Untitled-design-25.png" alt="Company Logo" class="w-24 md:w-32 h-auto">
         </div>
 
-        <div class="absolute bottom-5 right-5 z-40">
-            <button id="sound-toggle-btn-religions" class="bg-black/30 backdrop-blur-sm rounded-full p-3 text-white hover:bg-black/50 transition-colors">
-                <svg id="icon-muted-religions" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75v.001M15 12v.001M12.75 14.25v.001M10.5 16.5v.001M4.5 12.75a7.5 7.5 0 0115 0v.001M4.5 12.75a7.5 7.5 0 0015 0v.001M12 18.75v.001M18.364 5.636l-.707.707a7.5 7.5 0 010 10.607l.707.707M5.636 5.636l.707.707a7.5 7.5 0 000 10.607l-.707.707M15 5.25a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008zm-6 0a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v-.008z" />
+        <div id="religion-content" class="absolute top-16 right-4 md:right-16 max-w-md text-right text-white transition-opacity duration-700 ease-in-out opacity-100">
+            <p class="text-lg font-bold text-brand-orange tracking-widest uppercase mb-2">Cultural Tapestry</p>
+            <h3 id="religion-name" class="text-5xl lg:text-6xl font-display font-bold mb-4">Timeless Traditions</h3>
+            <p id="religion-description" class="text-lg text-gray-200 leading-relaxed">
+                Experience the rich blend of culture and spirituality that defines Sri Lanka.
+            </p>
+        </div>
+<div class="absolute bottom-5 right-5 z-40">
+            <button id="sound-toggle-btn-religions" class="bg-black/30 backdrop-blur-sm rounded-full p-3 text-white hover:bg-black/50 transition-colors"> <svg id="icon-muted-religions" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75v.001M15 12v.001M12.75 14.25v.001M10.5 16.5v.001M4.5 12.75a7.5 7.5 0 0115 0v.001M4.5 12.75a7.5 7.5 0 0015 0v.001M12 18.75v.001M18.364 5.636l-.707.707a7.5 7.5 0 010 10.607l.707.707M5.636 5.636l.707.707a7.5 7.5 0 000 10.607l-.707.707M15 5.25a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008zm-6 0a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v-.008z" />
                 </svg>
-                <svg id="icon-unmuted-religions" class="w-6 h-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+                <svg id="icon-unmuted-religions" class="w-6 h-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
                 </svg>
             </button>
         </div>
     </div>
 </section>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-   const religions = [
-    { 
-        name: "Buddhism", 
-        description: "Buddhism is the most widely practiced religion in Sri Lanka, shaping its culture and values. The island is dotted with ancient stupas, magnificent temples, and tranquil monasteries.", 
-        videoUrl: "regi.mp4" 
-    },
-    { 
-        name: "Hinduism", 
-        description: "A vibrant and ancient faith, Hinduism in Sri Lanka is rich with colorful festivals, intricate temples (kovils), and deep philosophical traditions, particularly in the North and East.", 
-        videoUrl: "hindu.mp4" 
-    },
-    { 
-        name: "Islam", 
-        description: "Introduced by Arab traders centuries ago, Islam has a long and peaceful history in Sri Lanka, with its community contributing significantly to the island's diverse cultural and economic fabric.", 
-        videoUrl: "islam.mp4" 
-    }
-];
-
-    const religionSection = document.getElementById('religions');
-    const videoPlayer = document.getElementById('religion-video');
-    const religionContent = document.getElementById('religion-content');
-    const religionNameEl = document.getElementById('religion-name');
-    const religionDescriptionEl = document.getElementById('religion-description');
-    
-    const soundBtnReligions = document.getElementById('sound-toggle-btn-religions');
-    const iconMutedReligions = document.getElementById('icon-muted-religions');
-    const iconUnmutedReligions = document.getElementById('icon-unmuted-religions');
-
-    let currentReligionIndex = 0;
-
-    // --- HELPER FUNCTION to update icon state ---
-    function updateReligionSoundIcon(isMuted) {
-        if (isMuted) {
-            iconMutedReligions.classList.remove('hidden');
-            iconUnmutedReligions.classList.add('hidden');
-        } else {
-            iconUnmutedReligions.classList.remove('hidden');
-            iconMutedReligions.classList.add('hidden');
-        }
-    }
-
-    function updateReligion(index) {
-        currentReligionIndex = index;
-        const religion = religions[index];
-        videoPlayer.src = religion.videoUrl;
-        videoPlayer.load();
-        videoPlayer.play().catch(error => console.log("Autoplay was prevented:", error));
-
-        religionContent.style.opacity = 0;
-        setTimeout(() => {
-            religionNameEl.textContent = religion.name;
-            religionDescriptionEl.textContent = religion.description;
-            religionContent.style.opacity = 1;
-        }, 700);
-    }
-
-    videoPlayer.addEventListener('ended', () => {
-        const nextIndex = (currentReligionIndex + 1) % religions.length;
-        updateReligion(nextIndex);
-    });
-    
-    // Manual sound toggle button
-    soundBtnReligions.addEventListener('click', () => {
-        videoPlayer.muted = !videoPlayer.muted;
-        updateReligionSoundIcon(videoPlayer.muted);
-    });
-
-    // --- NEW: Intersection Observer for Auto Unmute/Mute on Scroll ---
-    const religionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Section is visible, UNMUTE the video
-                videoPlayer.muted = false;
-                updateReligionSoundIcon(false);
-            } else {
-                // Section is not visible, MUTE the video
-                videoPlayer.muted = true;
-                updateReligionSoundIcon(true);
-            }
-        });
-    }, {
-        threshold: 0.5 // Trigger when 50% of the section is visible
-    });
-
-    // Start observing the religions section
-    religionObserver.observe(religionSection);
-
-    // Initial load
-    updateReligion(0);
-});
-</script>
 
 <div class="container mx-auto px-4">
     <div class="w-full h-px bg-gray-200"></div>
@@ -847,80 +1167,75 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<section id="beaches" class="relative h-[60vh] md:h-screen flex items-center overflow-hidden">
-    <video id="beach-video" src="sea.mp4" playsinline muted autoplay loop class="absolute top-0 left-0 w-full h-full object-cover z-0">
-    </video>
-    
-    <div class="absolute inset-0 bg-black/50 z-10"></div>
+<section id="beaches-youtube" class="relative h-screen flex items-center justify-center overflow-hidden">
 
+    <div id="beach-youtube-video-container">
+        <iframe
+            id="beach-youtube-video"
+            src="https://www.youtube.com/embed/LSjdg5PvaL4?enablejsapi=1&loop=1&playlist=LSjdg5PvaL4&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&autoplay=1&mute=1"
+            title="Beauty of Sri Lankan Beaches"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <div class="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+    
     <div class="relative container mx-auto px-4 z-20 h-full">
-        
+
+        <div class="absolute top-16 left-4 md:left-16 flex items-center gap-4">
+            <img src="https://i.ibb.co/pr9BB797/Untitled-design-25.png" alt="Company Logo" class="w-16 md:w-20 h-auto">
+            <span class="text-white font-display text-sm tracking-wider uppercase hidden md:block">
+                Everyday in Summer<br>Sri Lanka
+            </span>
+        </div>
+
         <div id="beach-content" class="absolute top-16 right-4 md:right-16 max-w-md text-right text-white">
             <p class="text-lg font-bold text-brand-orange tracking-widest uppercase mb-2">Pristine Coastline</p>
-            
             <h3 id="beach-name" class="text-5xl lg:text-6xl font-display font-bold mb-4">Beauty of Sri Lankan Beaches</h3>
-            
-            <p id="beach-description" class="text-lg text-gray-200 leading-relaxed">
-                Famous for its calm, blue waters and golden sands, Unawatuna is a popular spot for swimming, snorkeling, and enjoying the vibrant beachside life.
+            <p id="beach-description" class="text-lg text-gray-200 leading-relaxed font-body">
+                Famous for its calm, blue waters and golden sands, Sri Lanka offers some of the most stunning beaches in the world.
             </p>
         </div>
 
-        <div class="absolute bottom-5 right-5 z-40">
-            <button id="sound-toggle-btn-beaches" class="bg-black/30 backdrop-blur-sm rounded-full p-3 text-white hover:bg-black/50 transition-colors">
-                <svg id="icon-muted-beaches" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0_0_24_24" stroke-width="1.5" stroke="currentColor">
+ <div class="absolute bottom-5 right-5 z-40">
+            <button id="sound-toggle-btn-perahera" class="bg-black/30 backdrop-blur-sm rounded-full p-3 text-white hover:bg-black/50 transition-colors">
+                <svg id="icon-muted-perahera" class="w-6 h-6" xmlns="http://www.w.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75v.001M15 12v.001M12.75 14.25v.001M10.5 16.5v.001M4.5 12.75a7.5 7.5 0 0115 0v.001M4.5 12.75a7.5 7.5 0 0015 0v.001M12 18.75v.001M18.364 5.636l-.707.707a7.5 7.5 0 010 10.607l.707.707M5.636 5.636l.707.707a7.5 7.5 0 000 10.607l-.707.707M15 5.25a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008zm-6 0a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v-.008z" />
                 </svg>
-                <svg id="icon-unmuted-beaches" class="w-6 h-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0_0_24_24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.5 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.053v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+                <svg id="icon-unmuted-perahera" class="w-6 h-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
                 </svg>
             </button>
         </div>
+
     </div>
 </section>
-<script>
-// DOM එක සම්පූර්ණයෙන් load වුනාට පස්සේ මේ code එක run වෙන්න
-document.addEventListener('DOMContentLoaded', () => {
 
-    // අදාළ HTML elements ටික තෝරගන්න
-    const beachSection = document.getElementById('beaches');
-    const beachVideo = document.getElementById('beach-video');
-    const mutedIcon = document.getElementById('icon-muted-beaches');
-    const unmutedIcon = document.getElementById('icon-unmuted-beaches');
+<style>
+/* YouTube Full Cover Trick for Beaches */
+#beach-youtube-video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Important! */
+  z-index: 0;
+}
 
-    // Intersection Observer එකට අවශ්‍ය options හදාගන්න
-    const observerOptions = {
-        root: null, // මුළු screen එකම බලන්න
-        rootMargin: '0px',
-        threshold: 0.5 // Section එක 50%ක් පෙනුනම වැඩ කරන්න
-    };
-
-    // Observer එක නිර්මාණය කරන්න
-    const observer = new IntersectionObserver((entries) => {
-        // Observe කරන element එක screen එකට එනවද යනවද කියලා බලනවා
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Section එක screen එකේ පේනවා නම්:
-                beachVideo.muted = false; // sound on කරන්න
-                mutedIcon.classList.add('hidden');
-                unmutedIcon.classList.remove('hidden');
-            } else {
-                // Section එක screen එකෙන් එළියට ගියා නම්:
-                beachVideo.muted = true; // sound off කරන්න
-                mutedIcon.classList.remove('hidden');
-                unmutedIcon.classList.add('hidden');
-            }
-        });
-    }, observerOptions);
-
-    // 'beaches' section එක observe කරන්න (බලාගෙන ඉන්න) පටන් ගන්න
-    // Section එක තියෙනවද කියලත් check කරනවා error එන එක නවත්තන්න
-    if (beachSection) {
-        observer.observe(beachSection);
-    }
-    
-});
-
-</script>
+#beach-youtube-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 178vh; /* Scale width based on height */
+  min-width: 100%;
+  height: 100vw; /* Scale height based on width */
+  min-height: 100%;
+  transform: translate(-50%, -50%); /* Center */
+}
+</style>
 
 <section id="dalada-maligawa" class="bg-white py-20">
     <div class="container mx-auto px-4">
@@ -981,26 +1296,41 @@ Beyond its religious importance, the temple plays a vital role in Sri Lankan her
 });
 
 </script>
+<section id="perahera-youtube" class="relative h-screen flex items-center justify-center overflow-hidden">
 
-<section id="perahera" class="relative h-[60vh] md:h-screen flex items-center overflow-hidden">
-    <video id="perahera-video" src="tooth.mp4" playsinline muted autoplay loop class="absolute top-0 left-0 w-full h-full object-cover z-0">
-    </video>
-    
-    <div class="absolute inset-0 bg-black/50 z-10"></div>
+    <div id="perahera-youtube-video-container">
+        <iframe
+            id="perahera-youtube-video"
+           src="https://www.youtube.com/embed/d0vlt4HWhCA?enablejsapi=1&loop=1&playlist=d0vlt4HWhCA&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&autoplay=1&mute=1"
+            title="Kandy Esala Perahera"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <div class="absolute inset-0 bg-black bg-opacity-60 z-10"></div>
 
     <div class="relative container mx-auto px-4 z-20 h-full">
-        
+
+        <div class="absolute top-16 left-4 md:left-16 flex items-center gap-4">
+            <img src="https://i.ibb.co/pr9BB797/Untitled-design-25.png" alt="Company Logo" class="w-16 md:w-20 h-auto">
+            <span class="text-white font-display text-sm tracking-wider uppercase hidden md:block">
+                Everyday in Summer<br>Sri Lanka
+            </span>
+        </div>
+
         <div id="perahera-content" class="absolute top-16 right-4 md:right-16 max-w-md text-right text-white">
             <p class="text-lg font-bold text-brand-orange tracking-widest uppercase mb-2">Cultural Pageant</p>
             <h3 id="perahera-name" class="text-5xl lg:text-6xl font-display font-bold mb-4">Kandy Esala Perahera</h3>
-            <p id="perahera-description" class="text-lg text-gray-200 leading-relaxed">
+            <p id="perahera-description" class="text-lg text-gray-200 leading-relaxed font-body">
                 The Kandy Esala Perahera, also known as The Festival of the Tooth, is a grand festival celebrated with elegant costumes, cultural dances and paying homage to the Sacred Tooth Relic of Lord Buddha.
             </p>
         </div>
 
         <div class="absolute bottom-5 right-5 z-40">
             <button id="sound-toggle-btn-perahera" class="bg-black/30 backdrop-blur-sm rounded-full p-3 text-white hover:bg-black/50 transition-colors">
-                <svg id="icon-muted-perahera" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <svg id="icon-muted-perahera" class="w-6 h-6" xmlns="http://www.w.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75v.001M15 12v.001M12.75 14.25v.001M10.5 16.5v.001M4.5 12.75a7.5 7.5 0 0115 0v.001M4.5 12.75a7.5 7.5 0 0015 0v.001M12 18.75v.001M18.364 5.636l-.707.707a7.5 7.5 0 010 10.607l.707.707M5.636 5.636l.707.707a7.5 7.5 0 000 10.607l-.707.707M15 5.25a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008zm-6 0a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v-.008z" />
                 </svg>
                 <svg id="icon-unmuted-perahera" class="w-6 h-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -1011,46 +1341,39 @@ Beyond its religious importance, the temple plays a vital role in Sri Lankan her
     </div>
 </section>
 
+<style>
+/* YouTube Full Cover Trick for Perahera */
+#perahera-youtube-video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Important! */
+  z-index: 0;
+}
+
+#perahera-youtube-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 178vh; /* Scale width based on height */
+  min-width: 100%;
+  height: 100vw; /* Scale height based on width */
+  min-height: 100%;
+  transform: translate(-50%, -50%); /* Center */
+}
+</style>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-
-    // පෙරහැර section එකට අදාළ elements තෝරගන්න
-    const peraheraSection = document.getElementById('perahera');
-    const peraheraVideo = document.getElementById('perahera-video');
-    const mutedIconPerahera = document.getElementById('icon-muted-perahera');
-    const unmutedIconPerahera = document.getElementById('icon-unmuted-perahera');
-
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.5 
-    };
-
-    // පෙරහැර section එකට අදාළ observer එක
-    const peraheraObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Section එක පේනවා නම් sound on කරන්න
-                peraheraVideo.muted = false;
-                mutedIconPerahera.classList.add('hidden');
-                unmutedIconPerahera.classList.remove('hidden');
-            } else {
-                // Section එක පේන්නේ නැත්නම් sound off කරන්න
-                peraheraVideo.muted = true;
-                mutedIconPerahera.classList.remove('hidden');
-                unmutedIconPerahera.classList.add('hidden');
-            }
-        });
-    }, observerOptions);
-
-    // 'perahera' section එක observe කරන්න පටන් ගන්න
-    if (peraheraSection) {
-        peraheraObserver.observe(peraheraSection);
+    if (!window.YT) { // Check if YT object exists
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        console.log("YouTube API script loaded by Perahera section.");
     }
-    
-});
-
 </script>
+
 
 <section id="things-to-do" class="relative py-10 overflow-hidden bg-white">
     <div class="container mx-auto px-4">
@@ -1246,172 +1569,409 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
     </main>
 
-    <section id="tour-packages" class="py-20 bg-brand-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-5xl font-display font-bold text-brand-dark">Our Curated Packages</h2>
-                <p class="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
-                    Choose the journey that's perfect for you. Contact us to customize any tour.
-                </p>
+<section id="ella-beauty" class="relative h-screen flex items-center justify-center overflow-hidden">
+
+    <div id="ella-youtube-video-container">
+        <iframe
+            id="ella-youtube-video"
+           src="https://www.youtube.com/embed/kVk7WdSHv9g?enablejsapi=1&loop=1&playlist=kVk7WdSHv9g&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&autoplay=1&mute=1"
+            title="Beauty of Ella Sri Lanka"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <div class="absolute inset-0 bg-black bg-opacity-60 z-10"></div>
+
+    <div class="relative container mx-auto px-4 z-20 h-full">
+
+        <div class="absolute top-16 left-4 md:left-16 flex items-center gap-4">
+            <img src="https://i.ibb.co/pr9BB797/Untitled-design-25.png" alt="Company Logo" class="w-16 md:w-20 h-auto">
+            <span class="text-white font-display text-sm tracking-wider uppercase hidden md:block">
+                Everyday in Summer<br>Sri Lanka
+            </span>
+        </div>
+
+        <div id="ella-content" class="absolute top-16 right-4 md:right-16 max-w-md text-right text-white">
+            <p class="text-lg font-bold text-brand-orange tracking-widest uppercase mb-2">Breathtaking Highlands</p>
+            <h3 id="ella-name" class="text-5xl lg:text-6xl font-display font-bold mb-4">Beauty of Ella</h3>
+            <p id="ella-description" class="text-lg text-gray-200 leading-relaxed font-body">
+                Discover the stunning vistas, lush tea plantations, and charming atmosphere of Ella, a gem in Sri Lanka's hill country.
+            </p>
+        </div>
+
+        <div class="absolute bottom-5 right-5 z-40">
+            <button id="sound-toggle-btn-ella" class="bg-black/30 backdrop-blur-sm rounded-full p-3 text-white hover:bg-black/50 transition-colors">
+                <svg id="icon-muted-ella" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75v.001M15 12v.001M12.75 14.25v.001M10.5 16.5v.001M4.5 12.75a7.5 7.5 0 0115 0v.001M4.5 12.75a7.5 7.5 0 0015 0v.001M12 18.75v.001M18.364 5.636l-.707.707a7.5 7.5 0 010 10.607l.707.707M5.636 5.636l.707.707a7.5 7.5 0 000 10.607l-.707.707M15 5.25a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008zm-6 0a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v-.008z" />
+                </svg>
+                <svg id="icon-unmuted-ella" class="w-6 h-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+                </svg>
+            </button>
+        </div>
+
+    </div>
+</section>
+
+
+<style>
+/* YouTube Full Cover Trick (More Aggressive) */
+#ella-youtube-video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* <-- Meka Important! Eliye yana ewa hide karanawa */
+  z-index: 0;
+}
+
+#ella-youtube-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* --- Width & Height Wenas Kala --- */
+  width: 178vh; /* Minimum width = screen height * 16/9 ratio (approx) */
+  min-width: 100%; /* Eth 100% width ekakuth thiyagannawa */
+  height: 100vw; /* Minimum height = screen width * 9/16 ratio */
+  min-height: 100%; /* Eth 100% height ekakuth thiyagannawa */
+  transform: translate(-50%, -50%); /* Center karanawa */
+}
+</style>
+
+<section id="tour-packages" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+
+            <div>
+                <div class="mb-12">
+                    <h2 class="text-5xl font-display font-bold text-brand-dark">Our Curated Packages</h2>
+                    <p class="text-lg text-gray-600 mt-4 max-w-2xl font-body">
+                        Choose the journey that's perfect for you. Contact us to customize any tour.
+                    </p>
+                </div>
+
+                <div class="relative">
+                    <div class="swiper-container tour-packages-slider relative overflow-hidden rounded-lg shadow-lg border border-gray-200">
+                        <div class="swiper-wrapper">
+                            
+                            <div class="swiper-slide" data-title="14 Day Luxury">
+                                <div class="bg-white overflow-hidden flex flex-col h-full">
+                                    <div class="p-6 border-b border-gray-200">
+                                        <h3 class="text-2xl font-display font-bold text-brand-dark">14 Day Luxury Tour</h3>
+                                        <p class="text-md text-brand-orange font-semibold mt-1 font-body">5 Star & Small Luxury Boutique Hotels</p>
+                                    </div>
+                                    <div class="p-6 flex-grow font-body">
+                                        <p class="text-4xl font-display font-bold text-brand-dark">$5500</p>
+                                        <p class="text-gray-600 mb-4">per person</p>
+                                        <p class="text-gray-700 font-semibold">"With all Meals - FB Basis"</p>
+                                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                                            <li>14-day duration</li>
+                                            <li>All meals included (Full Board)</li>
+                                            <li>Luxury transport included</li>
+                                        </ul>
+                                    </div>
+                                    <div class="p-6 bg-gray-50">
+                                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
+                                            Inquire Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="swiper-slide" data-title="14 Day Premium">
+                                <div class="bg-white overflow-hidden flex flex-col h-full">
+                                    <div class="p-6 border-b border-gray-200">
+                                        <h3 class="text-2xl font-display font-bold text-brand-dark">14 Day Premium Tour</h3>
+                                        <p class="text-md text-brand-orange font-semibold mt-1 font-body">4 Star and 5 Star Hotels</p>
+                                    </div>
+                                    <div class="p-6 flex-grow font-body">
+                                        <p class="text-4xl font-display font-bold text-brand-dark">$4500</p>
+                                        <p class="text-gray-600 mb-4">per person</p>
+                                        <p class="text-gray-700 font-semibold">"With all Meals - FB Basis"</p>
+                                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                                            <li>14-day duration</li>
+                                            <li>All meals included (Full Board)</li>
+                                            <li>Luxury transport included</li>
+                                        </ul>
+                                    </div>
+                                    <div class="p-6 bg-gray-50">
+                                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
+                                            Inquire Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="swiper-slide" data-title="10 or 12 Day">
+                                <div class="bg-white overflow-hidden flex flex-col h-full">
+                                    <div class="p-6 border-b border-gray-200">
+                                        <h3 class="text-2xl font-display font-bold text-brand-dark">10 or 12 Day Tour</h3>
+                                        <p class="text-md text-brand-orange font-semibold mt-1 font-body">4 Star Hotels</p>
+                                    </div>
+                                    <div class="p-6 flex-grow font-body">
+                                        <p class="text-4xl font-display font-bold text-brand-dark">$3500</p>
+                                        <p class="text-gray-600 mb-4">per person</p>
+                                        <p class="text-gray-700 font-semibold">"FB and HB Basis"</p>
+                                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                                            <li>10 to 12-day duration</li>
+                                            <li>Full Board & Half Board meals</li>
+                                            <li>Covers Kandy, Nuwara Eliya, Ella</li>
+                                        </ul>
+                                    </div>
+                                    <div class="p-6 bg-gray-50">
+                                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
+                                            Inquire Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="swiper-slide" data-title="08 or 10 Day">
+                                <div class="bg-white overflow-hidden flex flex-col h-full">
+                                    <div class="p-6 border-b border-gray-200">
+                                        <h3 class="text-2xl font-display font-bold text-brand-dark">08 or 10 Day Tour</h3>
+                                        <p class="text-md text-brand-orange font-semibold mt-1 font-body">4 Star Hotels</p>
+                                    </div>
+                                    <div class="p-6 flex-grow font-body">
+                                        <p class="text-4xl font-display font-bold text-brand-dark">$2500</p>
+                                        <p class="text-gray-600 mb-4">per person</p>
+                                        <p class="text-gray-700 font-semibold">"HB Basis"</p>
+                                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                                            <li>8 to 10-day duration</li>
+                                            <li>Half Board meals</li>
+                                            <li>Covers Sigiriya, Kandy, Ella</li>
+                                        </ul>
+                                    </div>
+                                    <div class="p-6 bg-gray-50">
+                                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
+                                            Inquire Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="swiper-slide" data-title="VIP Helicopter">
+                                <div class="bg-white overflow-hidden flex flex-col h-full">
+                                    <div class="p-6 border-b border-gray-200">
+                                        <h3 class="text-2xl font-display font-bold text-brand-dark">VIP Helicopter Tour</h3>
+                                        <p class="text-md text-brand-orange font-semibold mt-1 font-body">08 or 10 Days - Sky by Helicopters</p>
+                                    </div>
+                                    <div class="p-6 flex-grow font-body">
+                                        <p class="text-4xl font-display font-bold text-brand-dark">$10,000</p>
+                                        <p class="text-gray-600 mb-4">per person</p>
+                                        <p class="text-gray-700 font-semibold">Suites Rooms Only - FB Basis</p>
+                                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                                            <li>Travel by Helicopter</li>
+                                            <li>Suite Rooms only</li>
+                                            <li>All meals included (Full Board)</li>
+                                            <li>Exclusive VIP experience</li>
+                                        </ul>
+                                    </div>
+                                    <div class="p-6 bg-gray-50">
+                                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
+                                            Inquire Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                    <div class="swiper-pagination-custom mt-8 flex justify-center flex-wrap gap-3"></div>
+
+                    <div class="swiper-button-prev !left-[-20px] !right-auto !w-10 !h-10 rounded-full !bg-white border border-gray-200 shadow-md flex items-center justify-center transform -translate-y-1/2 top-1/2"></div>
+                    <div class="swiper-button-next !right-[-20px] !left-auto !w-10 !h-10 rounded-full !bg-white border border-gray-200 shadow-md flex items-center justify-center transform -translate-y-1/2 top-1/2"></div>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-                <div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden flex flex-col">
-                    <div class="p-6 border-b border-gray-200">
-                        <h3 class="text-2xl font-display font-bold text-brand-dark">14 Day Luxury Tour</h3>
-                        <p class="text-md text-brand-orange font-semibold mt-1">5 Star & Small Luxury Boutique Hotels</p>
-                    </div>
-                    <div class="p-6 flex-grow">
-                        <p class="text-4xl font-display font-bold text-brand-dark">$5500</p>
-                        <p class="text-gray-600 mb-4">per person</p>
-                        <p class="text-gray-700 font-semibold">"With all Meals - FB Basis"</p>
-                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
-                            <li>14-day duration</li>
-                            <li>All meals included (Full Board)</li>
-                            <li>Luxury transport included</li>
-                        </ul>
-                    </div>
-                    <div class="p-6 bg-gray-50">
-                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300">
-                            Inquire Now
-                        </a>
-                    </div>
-                </div>
-
-                <div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden flex flex-col">
-                    <div class="p-6 border-b border-gray-200">
-                        <h3 class="text-2xl font-display font-bold text-brand-dark">14 Day Premium Tour</h3>
-                        <p class="text-md text-brand-orange font-semibold mt-1">4 Star and 5 Star Hotels</p>
-                    </div>
-                    <div class="p-6 flex-grow">
-                        <p class="text-4xl font-display font-bold text-brand-dark">$4500</p>
-                        <p class="text-gray-600 mb-4">per person</p>
-                        <p class="text-gray-700 font-semibold">"With all Meals - FB Basis"</p>
-                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
-                            <li>14-day duration</li>
-                            <li>All meals included (Full Board)</li>
-                            <li>Luxury transport included</li>
-                        </ul>
-                    </div>
-                    <div class="p-6 bg-gray-50">
-                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300">
-                            Inquire Now
-                        </a>
-                    </div>
-                </div>
-
-                <div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden flex flex-col">
-                    <div class="p-6 border-b border-gray-200">
-                        <h3 class="text-2xl font-display font-bold text-brand-dark">10 or 12 Day Tour</h3>
-                        <p class="text-md text-brand-orange font-semibold mt-1">4 Star Hotels</p>
-                    </div>
-                    <div class="p-6 flex-grow">
-                        <p class="text-4xl font-display font-bold text-brand-dark">$3500</p>
-                        <p class="text-gray-600 mb-4">per person</p>
-                        <p class="text-gray-700 font-semibold">"FB and HB Basis"</p>
-                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
-                            <li>10 to 12-day duration</li>
-                            <li>Full Board & Half Board meals</li>
-                            <li>Covers Kandy, Nuwara Eliya, Ella</li>
-                        </ul>
-                    </div>
-                    <div class="p-6 bg-gray-50">
-                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300">
-                            Inquire Now
-                        </a>
-                    </div>
-                </div>
-
-                <div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden flex flex-col">
-                    <div class="p-6 border-b border-gray-200">
-                        <h3 class="text-2xl font-display font-bold text-brand-dark">08 or 10 Day Tour</h3>
-                        <p class="text-md text-brand-orange font-semibold mt-1">4 Star Hotels</p>
-                    </div>
-                    <div class="p-6 flex-grow">
-                        <p class="text-4xl font-display font-bold text-brand-dark">$2500</p>
-                        <p class="text-gray-600 mb-4">per person</p>
-                        <p class="text-gray-700 font-semibold">"HB Basis"</p>
-                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
-                            <li>8 to 10-day duration</li>
-                            <li>Half Board meals</li>
-                            <li>Covers Sigiriya, Kandy, Ella</li>
-                        </ul>
-                    </div>
-                    <div class="p-6 bg-gray-50">
-                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300">
-                            Inquire Now
-                        </a>
-                    </div>
-                </div>
-
-                <div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden flex flex-col">
-                    <div class="p-6 border-b border-gray-200">
-                        <h3 class="text-2xl font-display font-bold text-brand-dark">VIP Helicopter Tour</h3>
-                        <p class="text-md text-brand-orange font-semibold mt-1">08 or 10 Days - Sky by Helicopters</p>
-                    </div>
-                    <div class="p-6 flex-grow">
-                        <p class="text-4xl font-display font-bold text-brand-dark">$10,000</p>
-                        <p class="text-gray-600 mb-4">per person</p>
-                        <p class="text-gray-700 font-semibold">Suites Rooms Only - FB Basis</p>
-                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
-                            <li>Travel by Helicopter</li>
-                            <li>Suite Rooms only</li>
-                            <li>All meals included (Full Board)</li>
-                        </ul>
-                    </div>
-                    <div class="p-6 bg-gray-50">
-                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300">
-                            Inquire Now
-                        </a>
-                    </div>
-                </div>
-
-            </div> <div class="text-center mt-20 mb-12">
-                <h2 class="text-4xl font-display font-bold text-brand-dark">Specialty Tours</h2>
-                <p class="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
-                    Crafted for your unique interests and special moments.
-                </p>
+            <div class="w-full">
+                <img src="every.png" 
+                     alt="Scenic Sri Lankan train tour" 
+                     class="w-full h-auto rounded-lg lg:sticky top-28">
             </div>
+
+        </div> 
+        
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Swiper මගින් හදන bullet එකට default style අයින් කරනවා */
+    .swiper-pagination-custom .swiper-pagination-bullet {
+        width: auto;
+        height: auto;
+        background: transparent;
+        opacity: 1;
+        border-radius: 0;
+        margin: 0 !important; /* Swiper ගේ margin අයින් කරන්න */
+    }
+    
+    /* අපේ custom box එකේ transition */
+    .pagination-box {
+        transition: all 0.3s ease;
+    }
+    
+    /* Active වෙන box එකට මේ style එක apply වෙනවා */
+    .swiper-pagination-custom .swiper-pagination-bullet-active .pagination-box {
+        border-color: #F97316; /* brand-orange */
+        background-color: #FFF7ED; /* orange-50 */
+        color: #EA580C; /* brand-orange-darker */
+        font-weight: 700;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // ඔරිජිනල් slide ටික විතරක් select කරගන්න (loop:true පාවිච්චි කරනවා නම් duplicate අයින් කරන්න)
+    const slides = document.querySelectorAll('.tour-packages-slider .swiper-slide:not(.swiper-slide-duplicate)');
+
+    const swiper = new Swiper('.tour-packages-slider', {
+        
+        // ඔයාට loop වෙන්න ඕන නම් මේක add කරන්න
+        // loop: true, 
+
+        // Navigation buttons
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+
+        // අලුත් Custom Pagination
+        pagination: {
+            el: '.swiper-pagination-custom', // අපේ අලුත් container එක
+            clickable: true,
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            // හැම bullet එකක්ම custom HTML එකක් විදිහට හදන function එක
+            renderBullet: function (index, className) {
+                // 'className' එක Swiper එකෙන් එන්නේ 'swiper-pagination-bullet'
+                
+                // අර slide එකෙන් data-title එක ගන්නවා
+                const title = slides[index] ? slides[index].getAttribute('data-title') : `Package ${index + 1}`;
+                
+                // අපේ custom box එකේ HTML එක
+                return `
+                    <div class="${className}">
+                        <div class="pagination-box w-32 h-20 p-2 border rounded-lg 
+                                    flex items-center justify-center text-center 
+                                    text-xs font-body
+                                    border-gray-300 bg-white text-gray-700 font-medium
+                                    hover:border-brand-orange hover:bg-orange-50">
+                            ${title}
+                        </div>
+                    </div>
+                `;
+            }
+        },
+    });
+});
+</script>
 
-                <div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden flex flex-col">
-                    <div class="p-6 border-b border-gray-200">
-                        <h3 class="text-2xl font-display font-bold text-brand-dark">Paradise Of Honeymooners</h3>
-                        <p class="text-md text-brand-orange font-semibold mt-1">For Anniversaries or any special Romance</p>
-                    </div>
-                    <div class="p-6 flex-grow">
-                        <p class="text-4xl font-display font-bold text-brand-dark">$3000+</p>
-                        <p class="text-gray-600 mb-4">per person, onwards</p>
-                        <p class="text-gray-700 font-semibold">"Tailormade as you wish on your very special days…"</p>
-                    </div>
-                    <div class="p-6 bg-gray-50">
-                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300">
-                            Contact Us for Details
-                        </a>
-                    </div>
+<section id="specialty-tours" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+            <div class="w-full">
+                <img src="honey.png"
+                     alt="Specialty tours in Sri Lanka"
+                     class="w-full h-auto rounded-lg">
+                     </div>
+
+            <div>
+                <div class="mb-10 text-center lg:text-left">
+                    <h2 class="text-4xl font-display font-bold text-brand-dark">Specialty Tours</h2>
+                    <p class="text-lg text-gray-600 mt-3 max-w-xl mx-auto lg:mx-0 font-body">
+                        Crafted for your unique interests and special moments.
+                    </p>
                 </div>
 
-                <div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden flex flex-col">
-                    <div class="p-6 border-b border-gray-200">
-                        <h3 class="text-2xl font-display font-bold text-brand-dark">Meditation & Yoga Tour</h3>
-                        <p class="text-md text-brand-orange font-semibold mt-1">Health and Wealth Tour</p>
+                <div class="space-y-8 max-w-md mx-auto lg:mx-0">
+                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-2xl font-display font-bold text-brand-dark">Paradise Of Honeymooners</h3>
+                            <p class="text-md text-brand-orange font-semibold mt-1 font-body">For Anniversaries or any special Romance</p>
+                        </div>
+                        <div class="p-6 flex-grow font-body">
+                            <p class="text-4xl font-display font-bold text-brand-dark">$3000+</p>
+                            <p class="text-gray-600 mb-4">per person, onwards</p>
+                            <p class="text-gray-700 font-semibold">"Tailormade as you wish on your very special days…"</p>
+                        </div>
+                        <div class="p-6 bg-gray-50">
+                            <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
+                                Contact Us for Details
+                            </a>
+                        </div>
                     </div>
-                    <div class="p-6 flex-grow">
-                        <p class="text-4xl font-display font-bold text-brand-dark">$2500+</p>
-                        <p class="text-gray-600 mb-4">Starting price, based on preference</p>
-                        <p class="text-gray-700 font-semibold">A journey focused on meditation, yoga, health, and wealth.</p>
-                    </div>
-                    <div class="p-6 bg-gray-50">
-                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300">
-                            Contact Us for Details
-                        </a>
-                    </div>
-                </div>
 
-            </div> </div>
-    </section>
+                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-2xl font-display font-bold text-brand-dark">Meditation & Yoga Tour</h3>
+                            <p class="text-md text-brand-orange font-semibold mt-1 font-body">Health and Wealth Tour</p>
+                        </div>
+                        <div class="p-6 flex-grow font-body">
+                            <p class="text-4xl font-display font-bold text-brand-dark">$2500+</p>
+                            <p class="text-gray-600 mb-4">Starting price, based on preference</p>
+                            <p class="text-gray-700 font-semibold">A journey focused on meditation, yoga, health, and wealth.</p>
+                        </div>
+                        <div class="p-6 bg-gray-50">
+                            <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
+                                Contact Us for Details
+                            </a>
+                        </div>
+                    </div>
+
+                </div> </div>
+
+        </div>
+    </div>
+</section>
+<style>
+    /* Swiper Custom Styles */
+    .swiper-pagination-bullet-active {
+      background-color: #F97316 !important; /* brand-orange */
+    }
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: #F97316 !important; /* brand-orange */
+      transform: scale(0.7); /* Arrow size podi karanna */
+    }
+    .swiper-slide {
+        height: auto; 
+    }
+
+    /* ===== Slider Attention Animation ===== */
+    @keyframes pulse-shadow {
+        0% {
+            box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); /* brand-orange 40% opacity */
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); /* fade out */
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
+        }
+    }
+    
+    .tour-packages-slider {
+        /* Animation eka slider ekata apply kireema */
+        animation: pulse-shadow 2.5s infinite;
+    }
+
+    /* User mouse eka slider eka uda thiyaddi animation eka nawaththamu */
+    .tour-packages-slider:hover {
+        animation: none;
+    }
+</style>
+
     <section id="contact-section" class="py-20 bg-white"> <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
@@ -1534,4 +2094,366 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-10">
             
             <div>
-                <div class="flex items-center gap-4 mb-4
+                <div class="flex items-center gap-4 mb-4">
+                    <img src="https://i.ibb.co/pr9BB797/Untitled-design-25.png" alt="everyday in summer srilanka" class="h-12"/>
+                    <span class="text-white font-bold tracking-wider uppercase">
+                        Everyday in Summer Sri Lanka
+                    </span>
+                </div>
+                <p class="text-gray-400 italic">
+                    magical world
+                </p>
+            </div>
+
+            <div>
+                <h4 class="font-bold font-display text-lg mb-4">Quick Links</h4>
+                <ul class="space-y-2 text-gray-300">
+                    <li><a href="#" class="hover:text-brand-orange transition-colors">Home</a></li>
+                    <li><a href="#things-to-do" class="hover:text-brand-orange transition-colors">Things to Do</a></li>
+                    <li><a href="#experiences" class="hover:text-brand-orange transition-colors">Experiences</a></li>
+                    <li><a href="#map" class="hover:text-brand-orange transition-colors">Map</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold font-display text-lg mb-4">Follow Us</h4>
+                <div class="flex gap-4">
+                    <a href="#" aria-label="Facebook" class="text-gray-300 hover:text-brand-orange transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"></path></svg></a>
+                    <a href="#" aria-label="Instagram" class="text-gray-300 hover:text-brand-orange transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 012.153 2.153c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808a6.78 6.78 0 01-.465 2.427 4.902 4.902 0 01-2.153 2.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06a6.78 6.78 0 01-2.427-.465 4.902 4.902 0 01-2.153-2.153c-.247-.636-.416-1.363-.465-2.427A48.627 48.627 0 012 12.315c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 012.153-2.153c.636-.247 1.363.416 2.427.465C9.53 2.013 9.884 2 12.315 2zm0 1.622c-2.366 0-2.69.01-3.64.056-.94.043-1.495.2-1.88.363a3.287 3.287 0 00-1.446 1.446c-.163.385-.32.94-.363 1.88-.046.95-.056 1.274-.056 3.64s.01 2.69.056 3.64c.043.94.2 1.495.363 1.88a3.287 3.287 0 001.446 1.446c.385.163.94.32 1.88.363.95.046 1.274.056 3.64.056s2.69-.01 3.64-.056c.94-.043 1.495-.2 1.88-.363a3.287 3.287 0 001.446-1.446c.163.385.32.94.363-1.88.046.95.056 1.274.056 3.64s-.01-2.69-.056-3.64c-.043-.94-.2-1.495-.363-1.88a3.287 3.287 0 00-1.446-1.446c-.385-.163-.94-.32-1.88-.363-.95-.046-1.274-.056-3.64-.056zM12 8.118a3.882 3.882 0 100 7.764 3.882 3.882 0 000-7.764zm0 6.14a2.258 2.258 0 110-4.516 2.258 2.258 0 010 4.516zm5.88-6.354a.926.926 0 100-1.852.926.926 0 000 1.852z"></path></svg></a>
+                    <a href="#" aria-label="YouTube" class="text-gray-300 hover:text-brand-orange transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.78 22 12 22 12s0 3.22-.42 4.814a2.506 2.506 0 0 1-1.768 1.768c-1.594.42-7.812.42-7.812.42s-6.218 0-7.812-.42a2.506 2.506 0 0 1-1.768-1.768C2 15.22 2 12 2 12s0-3.22.42-4.814a2.506 2.506 0 0 1 1.768-1.768C5.782 5 12 5 12 5s6.218 0 7.812.418zM9.94 15.58V8.42L15.652 12 9.94 15.58z"></path></svg></a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold font-display text-lg mb-4">Contact Us</h4>
+                <ul class="space-y-3 text-gray-300">
+                    <li class="flex items-center gap-3">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                        <a href="tel:+393513389757" class="hover:text-brand-orange transition-colors">+39 351 338 9757</a>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <a href="mailto:contact@everydayinsummersrilanka.com" class="hover:text-brand-orange transition-colors">contact@everydayinsummersrilanka.com</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="border-t border-gray-700 pt-8 mt-8 text-center text-gray-400">
+            <p>&copy; 2025 everdayinsummersrilanka.com. All Rights Reserved. Crafted with ❤️ in Sri Lanka.</p>
+        </div>
+    </div>
+</footer>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // 1. Header Scroll Effect
+    // -------------------------
+    const header = document.getElementById('main-header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+
+    // 2. Scroll-triggered Fade-in Animations
+    // ----------------------------------------
+    const scrollElements = document.querySelectorAll('.scroll-fade-in');
+    
+    const elementObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target); // Animate only once
+            }
+        });
+    }, {
+        threshold: 0.1 // Trigger when 10% of the element is visible
+    });
+
+    scrollElements.forEach(el => {
+        elementObserver.observe(el);
+    });
+
+    // 3. Interactive SVG Map
+    // ------------------------
+    const mapPaths = document.querySelectorAll('#sri-lanka-map path');
+    const provinceNameEl = document.getElementById('province-name');
+    const provinceIntroEl = document.getElementById('province-intro');
+    const attractionsListEl = document.getElementById('province-attractions');
+
+    mapPaths.forEach(path => {
+        path.addEventListener('click', () => {
+            // Remove active class from all other paths
+            mapPaths.forEach(p => p.classList.remove('active'));
+            // Add active class to the clicked path
+            path.classList.add('active');
+
+            const provinceName = path.dataset.name;
+            const attractions = path.dataset.attractions.split(', '); // Split string into an array
+
+            // Update the info box
+            provinceNameEl.textContent = provinceName;
+            provinceIntroEl.textContent = `Discover the top attractions in the ${provinceName}.`;
+            
+            // Clear previous list
+            attractionsListEl.innerHTML = ''; 
+
+            // Create and append new list items
+            attractions.forEach(attraction => {
+                const li = document.createElement('li');
+                li.textContent = attraction;
+                attractionsListEl.appendChild(li);
+            });
+        });
+    });
+
+});
+</script>
+
+<button id="open-packages-panel" class="fixed bottom-6 right-6 z-[9999] bg-brand-orange text-white w-auto px-6 py-3 rounded-lg shadow-xl flex items-center transition-all duration-300 hover:bg-orange-600 transform hover:scale-105" aria-label="View Magic Tour">
+    <span class="font-bold text-lg">Explore Your Magical Tour</span>
+</button>
+
+<div id="packages-panel" class="fixed bottom-0 right-6 w-[90vw] max-w-sm h-[30rem] bg-brand-white z-[9999] shadow-2xl rounded-t-xl transform translate-y-full opacity-0 transition-all duration-500 ease-out pointer-events-none overflow-hidden flex flex-col">
+    
+    <div class="flex-shrink-0 flex justify-between items-center p-4 border-b border-gray-200 bg-brand-orange text-white rounded-t-xl">
+        <h2 class="text-xl font-display font-bold">Explore Your Magical Tour</h2>
+        <button id="close-packages-panel" class="hover:text-gray-200 transition-colors" aria-label="Close Panel">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+    </div>
+    
+    <div class="flex-grow p-4 overflow-y-auto bg-gray-50 flex justify-center items-center">
+        
+        <div id="map-container-panel" class="relative w-full h-full cursor-pointer">
+            <img src="map.png" alt="Map of Sri Lanka" class="w-full h-full object-contain">
+        </div>
+        
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- DOM Elements for Panel Map Click ---
+        const openBtn = document.getElementById('open-packages-panel');
+        const panel = document.getElementById('packages-panel');
+        const closeBtn = document.getElementById('close-packages-panel'); // Added closeBtn definition
+        const mapPanelContainer = document.getElementById('map-container-panel');
+        const targetSection = document.getElementById('things-to-do'); // "Explore Your Magical Tour" section
+
+        // --- Panel Open/Close Logic ---
+        function openPanel() {
+            if (!openBtn || !panel) return; // Check if elements exist
+            openBtn.style.display = 'none';
+            panel.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
+            panel.classList.add('opacity-100', 'pointer-events-auto');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePanel() {
+            if (!panel) return;
+            panel.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+            panel.classList.remove('opacity-100', 'pointer-events-auto');
+
+            setTimeout(() => {
+                if (openBtn) {
+                    openBtn.style.display = 'flex';
+                }
+                document.body.style.overflow = '';
+            }, 500);
+        }
+
+        // --- Event Listeners ---
+        if (openBtn) {
+            openBtn.addEventListener('click', openPanel);
+        } else {
+             console.error("Open button ('open-packages-panel') not found.");
+        }
+
+        if (closeBtn) { // Add listener for close button
+             closeBtn.addEventListener('click', closePanel);
+        } else {
+             console.error("Close button ('close-packages-panel') not found.");
+        }
+
+        if (mapPanelContainer && targetSection) {
+            mapPanelContainer.addEventListener('click', () => {
+                closePanel();
+                setTimeout(() => {
+                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 300);
+            });
+        } else {
+             if (!mapPanelContainer) console.error("Map panel container ('map-container-panel') not found.");
+             if (!targetSection) console.error("Target section ('things-to-do') not found.");
+        }
+
+         // Optional: Auto-open functionality after a delay
+         // setTimeout(() => {
+         //    openPanel();
+         // }, 5000); // Wait 5 seconds after page load
+
+    });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- Reusable Function to setup sound toggles ---
+    function setupPlayerSoundToggle(buttonId, playerKey, mutedIconId, unmutedIconId) {
+
+        const soundBtn = document.getElementById(buttonId);
+        const iconMuted = document.getElementById(mutedIconId);
+        const iconUnmuted = document.getElementById(unmutedIconId);
+
+        // --- IMPROVED Check ---
+        if (!soundBtn) { console.warn(`Sound button missing for player: ${playerKey} (ID: ${buttonId})`); return; }
+        if (!iconMuted) { console.warn(`Muted icon missing for player: ${playerKey} (ID: ${mutedIconId})`); return; }
+        if (!iconUnmuted) { console.warn(`Unmuted icon missing for player: ${playerKey} (ID: ${unmutedIconId})`); return; }
+        // --- END IMPROVED Check ---
+
+
+        // Helper function to update icons
+        const updateIcon = (isMuted) => {
+            // Add extra check here too, just in case elements disappear later
+            if(!iconMuted || !iconUnmuted) return;
+            if (isMuted) {
+                iconMuted.classList.remove('hidden');
+                iconUnmuted.classList.add('hidden');
+            } else {
+                iconUnmuted.classList.remove('hidden');
+                iconMuted.classList.add('hidden');
+            }
+        };
+
+        // Poll until the player is ready
+        const ensurePlayerReady = setInterval(() => {
+            const player = window.players?.[playerKey]?.player;
+            // Also check if isMuted function exists before proceeding
+            if (window.players?.[playerKey]?.ready && player && typeof player.isMuted === 'function') {
+                clearInterval(ensurePlayerReady);
+                console.log(`${playerKey} player ready. Initializing sound icon via generic setup.`); // Modified log
+                try { // Add try-catch around isMuted call
+                  updateIcon(player.isMuted()); // Set initial icon state
+                } catch (e) {
+                  console.error(`Error calling isMuted for ${playerKey}:`, e);
+                }
+            }
+        }, 500); // Check every 500ms
+
+        // Add click listener
+        soundBtn.addEventListener('click', () => {
+            const player = window.players?.[playerKey]?.player;
+            // Added more checks for player functions
+            if (!player || typeof player.isMuted !== 'function' || typeof player.unMute !== 'function' || typeof player.mute !== 'function' ) {
+                console.warn(`${playerKey} player not ready for sound toggle or missing functions.`);
+                return;
+            }
+
+            try { // Add try-catch around player actions
+                let newStateIsMuted; // Store the new state
+                if (player.isMuted()) {
+                    player.unMute();
+                    newStateIsMuted = false;
+                    console.log(`${playerKey} unmuted via generic button.`); // Added log
+                } else {
+                    player.mute();
+                    newStateIsMuted = true;
+                     console.log(`${playerKey} muted via generic button.`); // Added log
+                }
+                updateIcon(newStateIsMuted); // Update icon based on the action taken
+
+                // Tell the global script that the user has interacted
+                if (typeof window.handleUserInteraction === 'function') {
+                    window.handleUserInteraction();
+                }
+            } catch (e) {
+                 console.error(`Error toggling mute for ${playerKey}:`, e);
+            }
+        });
+    }
+
+    // --- Setup ALL sound buttons using the generic function ---
+    // === 👇 ADDED HERO BUTTON SETUP 👇 ===
+    setupPlayerSoundToggle('sound-toggle-btn', 'hero', 'icon-muted', 'icon-unmuted');
+    // === 👆 ADDED HERO BUTTON SETUP 👆 ===
+    setupPlayerSoundToggle('sound-toggle-btn-ella', 'ella', 'icon-muted-ella', 'icon-unmuted-ella');
+    setupPlayerSoundToggle('sound-toggle-btn-perahera', 'perahera', 'icon-muted-perahera', 'icon-unmuted-perahera');
+    setupPlayerSoundToggle('sound-toggle-btn-beach', 'beach', 'icon-muted-beach', 'icon-unmuted-beach');
+    // === 👇 ADDED RELIGIONS BUTTON SETUP 👇 ===
+    setupPlayerSoundToggle('sound-toggle-btn-religions', 'religion', 'icon-muted-religions', 'icon-unmuted-religions');
+    // === 👆 ADDED RELIGIONS BUTTON SETUP 👆 ===
+
+
+});
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // === Hero Sound Button Logic ===
+    const soundBtnHero = document.getElementById('sound-toggle-btn');
+    const iconMutedHero = document.getElementById('icon-muted');
+    const iconUnmutedHero = document.getElementById('icon-unmuted');
+    const playerKeyHero = 'hero'; // Key used in the global players object
+
+    if (soundBtnHero && iconMutedHero && iconUnmutedHero) {
+        const updateIconHero = (isMuted) => {
+            if (isMuted) {
+                iconMutedHero.classList.remove('hidden');
+                iconUnmutedHero.classList.add('hidden');
+            } else {
+                iconUnmutedHero.classList.remove('hidden');
+                iconMutedHero.classList.add('hidden');
+            }
+        };
+
+        // Poll until the player is ready
+        const ensurePlayerReadyHero = setInterval(() => {
+            const player = window.players?.[playerKeyHero]?.player;
+            if (window.players?.[playerKeyHero]?.ready && player && typeof player.isMuted === 'function') {
+                clearInterval(ensurePlayerReadyHero);
+                console.log(`${playerKeyHero} player ready. Initializing sound icon.`);
+                updateIconHero(player.isMuted());
+            } else {
+                // console.log(`Waiting for ${playerKeyHero} player...`); // Optional debug log
+            }
+        }, 500); // Check every 500ms
+
+        // Add click listener
+        soundBtnHero.addEventListener('click', () => {
+            const player = window.players?.[playerKeyHero]?.player;
+            if (!player || typeof player.isMuted !== 'function') {
+                console.warn(`${playerKeyHero} player not ready for sound toggle.`);
+                return;
+            }
+
+            // Toggle mute state
+            if (player.isMuted()) {
+                player.unMute();
+                updateIconHero(false);
+            } else {
+                player.mute();
+                updateIconHero(true);
+            }
+
+            // Tell the global script that the user has interacted
+            if (typeof window.handleUserInteraction === 'function') {
+                window.handleUserInteraction();
+            }
+        });
+    } else {
+        console.warn("Hero sound toggle elements missing.");
+        // Check if the IDs are correct: sound-toggle-btn, icon-muted, icon-unmuted
+        if(!soundBtnHero) console.error("Element with ID 'sound-toggle-btn' not found.");
+        if(!iconMutedHero) console.error("Element with ID 'icon-muted' not found.");
+        if(!iconUnmutedHero) console.error("Element with ID 'icon-unmuted' not found.");
+    }
+});
+</script>
+</body>
+</html>
