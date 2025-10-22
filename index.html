@@ -900,18 +900,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
-
 <section id="religions" class="relative h-[60vh] md:h-screen flex items-center overflow-hidden">
-    <div id="religion-youtube-video-container" class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-  <iframe
-    id="religion-youtube-video"
-    class="absolute top-1/2 left-1/2 w-[178vh] min-w-full h-[100vw] min-h-full transform -translate-x-1/2 -translate-y-1/2"
-    src="https://www.youtube.com/embed/u6RrLO2n1iE?enablejsapi=1&loop=1&playlist=u6RrLO2n1iE&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&autoplay=1&mute=1" 
-    title="Sri Lankan Culture" frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    allowfullscreen>
-</iframe>
+
+    <div id="religion-youtube-video-container">
+        <iframe
+            id="religion-youtube-video"
+            src="https://www.youtube.com/embed/u6RrLO2n1iE?enablejsapi=1&loop=1&playlist=u6RrLO2n1iE&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&autoplay=1&mute=1" 
+            title="Sri Lankan Culture" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+        </iframe>
     </div>
+
     <div class="absolute inset-0 bg-black/50 z-10"></div>
 
     <div class="relative container mx-auto px-4 z-20 h-full">
@@ -927,17 +927,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 Experience the rich blend of culture and spirituality that defines Sri Lanka.
             </p>
         </div>
-<div class="absolute bottom-5 right-5 z-40">
-            <button id="sound-toggle-btn-religions" class="bg-black/30 backdrop-blur-sm rounded-full p-3 text-white hover:bg-black/50 transition-colors"> <svg id="icon-muted-religions" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75v.001M15 12v.001M12.75 14.25v.001M10.5 16.5v.001M4.5 12.75a7.5 7.5 0 0115 0v.001M4.5 12.75a7.5 7.5 0 0015 0v.001M12 18.75v.001M18.364 5.636l-.707.707a7.5 7.5 0 010 10.607l.707.707M5.636 5.636l.707.707a7.5 7.5 0 000 10.607l-.707.707M15 5.25a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008zm-6 0a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v-.008z" />
+
+        <div class="absolute bottom-5 right-5 z-40">
+            <button id="sound-toggle-btn-religions" class="bg-black/30 backdrop-blur-sm rounded-full p-3 text-white hover:bg-black/50 transition-colors"> 
+                <svg id="icon-muted-religions" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"> 
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75v.001M15 12v.001M12.75 14.25v.001M10.5 16.5v.001M4.5 12.75a7.5 7.5 0 0115 0v.001M4.5 12.75a7.5 7.5 0 0015 0v.001M12 18.75v.001M18.364 5.636l-.707.707a7.5 7.5 0 010 10.607l.707.707M5.636 5.636l.707.707a7.5 7.5 0 000 10.607l-.707.707M15 5.25a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008zm-6 0a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v-.008z" />
                 </svg>
-                <svg id="icon-unmuted-religions" class="w-6 h-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+                <svg id="icon-unmuted-religions" class="w-6 h-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"> 
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
                 </svg>
             </button>
         </div>
     </div>
 </section>
 
+<style>
+/* YouTube Full Cover Trick for Beaches */
+#religion-youtube-video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Important! */
+  z-index: 0;
+}
 
+#religion-youtube-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 178vh; /* Scale width based on height */
+  min-width: 100%;
+  height: 100vw; /* Scale height based on width */
+  min-height: 100%;
+  transform: translate(-50%, -50%); /* Center */
+}
+</style>
 <div class="container mx-auto px-4">
     <div class="w-full h-px bg-gray-200"></div>
 </div>
@@ -947,13 +973,13 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
             
             <div id="slider-image-content" class="relative w-full aspect-square order-2 md:order-1">
-                <div class="slider-image-item"><img src="3.png" alt="Ambekke Dewalaya" class="w-full h-full object-contain"></div>
+                <div class="slider-image-item"><img src="https://i.ibb.co/HLSJGcm7/3.png" alt="Ambekke Dewalaya" class="w-full h-full object-contain"></div>
                 <div class="slider-image-item"><img src="4.png" alt="Galle Fort" class="w-full h-full object-contain"></div>
                 <div class="slider-image-item"><img src="5.png" alt="Ruwanwelisaya" class="w-full h-full object-contain"></div>
-                <div class="slider-image-item"><img src="6.png" alt="Sigiriya" class="w-full h-full object-contain"></div>
-                <div class="slider-image-item"><img src="7.png" alt="Thuparamaya" class="w-full h-full object-contain"></div>
-                <div class="slider-image-item"><img src="8.png" alt="Thiruketheeswaram Kovil" class="w-full h-full object-contain"></div>
-                <div class="slider-image-item"><img src="9.png" alt="Ambalangoda Masks" class="w-full h-full object-contain"></div>
+                <div class="slider-image-item"><img src="https://i.ibb.co/qYMqJTPt/6.png" alt="Sigiriya" class="w-full h-full object-contain"></div>
+                <div class="slider-image-item"><img src="https://i.ibb.co/pv8zsRzy/7.png" alt="Thuparamaya" class="w-full h-full object-contain"></div>
+                <div class="slider-image-item"><img src="https://i.ibb.co/qFxf33RV/8.png" alt="Thiruketheeswaram Kovil" class="w-full h-full object-contain"></div>
+                <div class="slider-image-item"><img src="https://i.ibb.co/Ps6sFfQN/9.png" alt="Ambalangoda Masks" class="w-full h-full object-contain"></div>
             </div>
 
             <div id="slider-text-content" class="relative min-h-[350px] order-1 md:order-2">
@@ -1258,7 +1284,7 @@ Beyond its religious importance, the temple plays a vital role in Sri Lankan her
             </div>
 
             <div class="md:w-1/2">
-                <img src="tooth1.png" 
+                <img src="https://i.ibb.co/cSpyJPDg/tooth1.png" 
                      alt="The Temple of the Sacred Tooth Relic in Kandy, Sri Lanka" 
                      class="w-full h-auto">
             </div>
@@ -1790,7 +1816,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
 
             <div class="w-full">
-                <img src="every.png" 
+                <img src="https://i.ibb.co/xqscQjLM/every.png" 
                      alt="Scenic Sri Lankan train tour" 
                      class="w-full h-auto rounded-lg lg:sticky top-28">
             </div>
@@ -1881,7 +1907,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
             <div class="w-full">
-                <img src="honey.png"
+                <img src="https://i.ibb.co/LXnvYXv5/honey.png"
                      alt="Specialty tours in Sri Lanka"
                      class="w-full h-auto rounded-lg">
                      </div>
