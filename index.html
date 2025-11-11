@@ -650,7 +650,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div id="hero-youtube-video-container" class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
         <iframe
             id="hero-youtube-video"
-            src="https://www.youtube.com/embed/tuoiHuxLUAk?si=pN6DcWjeONX3F_0L&enablejsapi=1&loop=1&playlist=tuoiHuxLUAk&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&autoplay=1&mute=1"
+            src="https://www.youtube.com/embed/h4gjQSvwDX8?si=WFHcIc2oAvB6fDbV&enablejsapi=1&loop=1&playlist=h4gjQSvwDX8&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&autoplay=1&mute=1"
             title="Hero Video Sri Lanka"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -906,7 +906,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div id="religion-youtube-video-container">
         <iframe
             id="religion-youtube-video"
-            src="https://www.youtube.com/embed/u6RrLO2n1iE?enablejsapi=1&loop=1&playlist=u6RrLO2n1iE&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&autoplay=1&mute=1" 
+            src="https://www.youtube.com/embed/YAqL2JFmO0Y?enablejsapi=1&loop=1&playlist=YAqL2JFmO0Y&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&autoplay=1&mute=1" 
             title="Sri Lankan Culture" frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen>
@@ -2016,9 +2016,18 @@ document.addEventListener('DOMContentLoaded', () => {
             <input type="email" id="form-email" name="email" required class="form-input" placeholder="you@example.com">
         </div>
     </div>
-    <div class="mt-6">
-        <label for="form-message" class="form-label">Tell Us Your Dream</label>
-        <textarea id="form-message" name="message" rows="4" class="form-input" placeholder="What would you like to experience? e.g., beaches, history, wildlife..."></textarea>
+   <div class="mt-6">
+        <label for="form-plan" class="form-label">Select a Plan (Optional)</label>
+        <select id="form-plan" name="plan" class="form-input">
+            <option value="Not Selected" selected>-- Choose a package --</option>
+            <option value="14 Day Luxury - $5500">14 Day Luxury - $5500</option>
+            <option value="14 Day Premium - $4500">14 Day Premium - $4500</option>
+            <option value="10 or 12 Day - $3500">10 or 12 Day - $3500</option>
+            <option value="08 or 10 Day - $2500">08 or 10 Day - $2500</option>
+            <option value="VIP Helicopter - $10,000">VIP Helicopter - $10,000</option>
+            <option value="Honeymoon - $3000+">Honeymoon - $3000+</option>
+            <option value="Meditation & Yoga - $2500+">Meditation & Yoga - $2500+</option>
+        </select>
     </div>
     <div class="mt-8">
         <button type="submit" class="w-full bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 text-lg">
@@ -2051,42 +2060,82 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
 </section>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const contactForm = document.getElementById('contact-form'); // Form එක තෝරාගැනීම
+<script type="module">
 
+  // Import the functions you need from the SDKs
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-analytics.js";
+  
+  // === 👇 Database eka Firestore walata wenas kara ===
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+  // ===================================================================
+  // Oyage Actual Firebase Configuration eka
+  // ===================================================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyAEY_jCqKzub1DdvkhSVGQRK3Gmb9mznn8",
+    authDomain: "everydayinsummer-cb20f.firebaseapp.com",
+    projectId: "everydayinsummer-cb20f",
+    storageBucket: "everydayinsummer-cb20f.firebasestorage.app",
+    messagingSenderId: "1007902148483",
+    appId: "1:1007902148483:web:5a64c17170e845586758b6",
+    measurementId: "G-46FKBXVZFG"
+  };
+  // ===================================================================
+
+  // Firebase Initialize Kirima
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app); 
+  const db = getFirestore(app);   // <-- getDatabase wenuwata getFirestore
+
+  // --- Form Submit Logic (Firestore wenas) ---
+  document.addEventListener('DOMContentLoaded', () => {
+    const contactForm = document.getElementById('contact-form');
+    
     if (contactForm) {
-        contactForm.addEventListener('submit', function(event) {
-            // Form එක submit වෙලා page එක reload වෙන එක නවත්වනවා
+        // Function eka 'async' karanna one 'await' use karanna
+        contactForm.addEventListener('submit', async function(event) {
             event.preventDefault(); 
-
-            // Form එකේ තියෙන input වල values ගන්නවා
+            
             const name = document.getElementById('form-name').value;
             const email = document.getElementById('form-email').value;
             const message = document.getElementById('form-message').value;
+            const selectedPlan = document.getElementById('form-plan').value;
+            
+            const submitButton = contactForm.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.innerHTML;
+            
+            submitButton.disabled = true;
+            submitButton.innerHTML = 'Sending...';
 
-            // ### ඔයා දුන්න number එක මෙතනට දාලා තියෙන්නේ ###
-            const yourWhatsappNumber = '393513389757'; 
-
-            // WhatsApp එකේ පේන්න ඕන message එක හදාගන්නවා
-            let whatsappMessage = `New Tour Inquiry!\n\n`;
-            whatsappMessage += `*Name:* ${name}\n`;
-            whatsappMessage += `*Email:* ${email}\n`;
-            whatsappMessage += `*Dream:* ${message}`;
-
-            // Message එක URL එකකට ගැලපෙන විදිහට encode කරනවා
-            const encodedMessage = encodeURIComponent(whatsappMessage);
-
-            // WhatsApp link එක හදාගන්නවා
-            const whatsappUrl = `https://wa.me/${yourWhatsappNumber}?text=${encodedMessage}`;
-
-            // අලුත් tab එකකින් WhatsApp link එක open කරනවා
-            window.open(whatsappUrl, '_blank');
+            try {
+                // --- Data Firestore walata yawana thana ---
+                // 'inquiries' kiyana "collection" (table eka) ekata data danna
+                await addDoc(collection(db, "inquiries"), {
+                    name: name,
+                    email: email,
+                    message: message,
+                    plan: selectedPlan,
+                    timestamp: serverTimestamp() // Data eka giya welawa
+                });
+                
+                // Sarthaka wunoth...
+                alert('Thank you for your inquiry! We will get back to you soon.');
+                contactForm.reset(); 
+                
+            } catch (error) {
+                // Weradunoth...
+                console.error("Error sending data to Firestore: ", error);
+                alert('Oops! Something went wrong. Please try again.');
+            } finally {
+                // Iwara unama button eka aye hadanna
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonText;
+            }
         });
     }
-});
+  });
 </script>
-
 <style>
     /* Styles for the form on a light background */
     .form-label {
@@ -2115,7 +2164,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 </style>
 
-   <footer class="bg-brand-dark text-white pt-20 pb-10">
+   <footer class="hidden md:block bg-brand-dark text-white pt-20 pb-10">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-10">
             
@@ -2241,7 +2290,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<button id="open-packages-panel" class="fixed bottom-6 right-6 z-[9999] bg-brand-orange text-white w-auto px-6 py-3 rounded-lg shadow-xl flex items-center transition-all duration-300 hover:bg-orange-600 transform hover:scale-105" aria-label="View Magic Tour">
+<button id="open-packages-panel" class="fixed bottom-20 right-6 md:bottom-6 z-[9999] bg-brand-orange text-white w-auto px-6 py-3 rounded-lg shadow-xl flex items-center transition-all duration-300 hover:bg-orange-600 transform hover:scale-105" aria-label="View Magic Tour">
     <span class="font-bold text-lg">Explore Your Magical Tour</span>
 </button>
 
@@ -2481,5 +2530,216 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
+
+<div id="auth-modal-overlay" class="fixed inset-0 bg-black bg-opacity-70 z-[9990] opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+
+<div id="auth-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-md bg-white z-[9991] rounded-lg shadow-2xl transform scale-90 opacity-0 transition-all duration-300 pointer-events-none">
+    
+    <button id="auth-modal-close" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition-colors z-10">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+
+    <div class="flex border-b border-gray-200">
+        <button id="auth-tab-login" class="flex-1 py-4 font-display font-bold text-center transition-colors duration-300 bg-brand-orange text-white">
+            Login
+        </button>
+        <button id="auth-tab-signup" class="flex-1 py-4 font-display font-bold text-center transition-colors duration-300 bg-gray-200 text-gray-700 hover:bg-gray-300">
+            Sign Up
+        </button>
+    </div>
+
+    <div class="p-8">
+
+        <div id="login-form-container">
+            <div class="text-center mb-6">
+                <img src="https://i.ibb.co/pr9BB797/Untitled-design-25.png" alt="Company Logo" class="w-16 h-16 mx-auto mb-3">
+                <h2 class="text-2xl font-display font-bold text-brand-dark">Welcome Back!</h2>
+            </div>
+            <form id="login-form">
+                <div class="mb-4">
+                    <label for="modal-login-email" class="form-label">Email Address</label>
+                    <input type="email" id="modal-login-email" name="email" required class="form-input" placeholder="you@example.com">
+                </div>
+                <div class="mb-6">
+                    <label for="modal-login-password" class="form-label">Password</label>
+                    <input type="password" id="modal-login-password" name="password" required class="form-input" placeholder="••••••••">
+                </div>
+                <div>
+                    <button type="submit" class="w-full bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 text-lg">
+                        Login
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="signup-form-container" class="hidden">
+             <div class="text-center mb-6">
+                <img src="https://i.ibb.co/pr9BB797/Untitled-design-25.png" alt="Company Logo" class="w-16 h-16 mx-auto mb-3">
+                <h2 class="text-2xl font-display font-bold text-brand-dark">Create Your Account</h2>
+            </div>
+            <form id="signup-form">
+                <div class="mb-4">
+                    <label for="modal-signup-name" class="form-label">Full Name</label>
+                    <input type="text" id="modal-signup-name" name="name" required class="form-input" placeholder="Your Name">
+                </div>
+                <div class="mb-4">
+                    <label for="modal-signup-email" class="form-label">Email Address</label>
+                    <input type="email" id="modal-signup-email" name="email" required class="form-input" placeholder="you@example.com">
+                </div>
+                <div class="mb-6">
+                    <label for="modal-signup-password" class="form-label">Password</label>
+                    <input type="password" id="modal-signup-password" name="password" required class="form-input" placeholder="Create a password">
+                </div>
+                <div>
+                    <button type="submit" class="w-full bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 text-lg">
+                        Create Account
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // Modal එකට අදාළ elements තෝරාගැනීම
+    const modalOverlay = document.getElementById('auth-modal-overlay');
+    const modal = document.getElementById('auth-modal');
+    const closeModalBtn = document.getElementById('auth-modal-close');
+    
+    // Tab buttons
+    const loginTab = document.getElementById('auth-tab-login');
+    const signupTab = document.getElementById('auth-tab-signup');
+    
+    // Form containers
+    const loginFormContainer = document.getElementById('login-form-container');
+    const signupFormContainer = document.getElementById('signup-form-container');
+    
+    // Forms
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+
+    // --- Modal එක open/close කරන Functions ---
+    function openAuthModal() {
+        if (modalOverlay && modal) {
+            modalOverlay.classList.add('visible');
+            modal.classList.add('visible');
+            document.body.style.overflow = 'hidden'; // Stop background scrolling
+        }
+    }
+
+    function closeAuthModal() {
+        if (modalOverlay && modal) {
+            modalOverlay.classList.remove('visible');
+            modal.classList.remove('visible');
+            document.body.style.overflow = ''; // Allow background scrolling
+        }
+    }
+
+    // --- 1. තත්පර 5කින් Modal එක Open කිරීම ---
+    setTimeout(openAuthModal, 5000); // 5000 milliseconds = 5 seconds
+
+    // --- 2. Close Button සහ Overlay Click කළාම Close කිරීම ---
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', closeAuthModal);
+    }
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', closeAuthModal);
+    }
+    
+    // --- 3. Tab මාරු කිරීමේ Logic එක ---
+    if (loginTab && signupTab && loginFormContainer && signupFormContainer) {
+        
+        // Show Login Tab
+        loginTab.addEventListener('click', () => {
+            // Show login form, hide signup form
+            loginFormContainer.classList.remove('hidden');
+            signupFormContainer.classList.add('hidden');
+            
+            // Update tab styles
+            loginTab.classList.add('bg-brand-orange', 'text-white');
+            loginTab.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+            
+            signupTab.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+            signupTab.classList.remove('bg-brand-orange', 'text-white');
+        });
+        
+        // Show Sign Up Tab
+        signupTab.addEventListener('click', () => {
+            // Hide login form, show signup form
+            loginFormContainer.classList.add('hidden');
+            signupFormContainer.classList.remove('hidden');
+            
+            // Update tab styles
+            signupTab.classList.add('bg-brand-orange', 'text-white');
+            signupTab.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+            
+            loginTab.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+            loginTab.classList.remove('bg-brand-orange', 'text-white');
+        });
+    }
+
+    // --- 4. Form Submit එක Handle කිරීම (Backend එකක් නැතුව) ---
+    if (loginForm) {
+        loginForm.addEventListener('submit', (event) => {
+            event.preventDefault(); 
+            alert("Login functionality requires a backend! This is just the UI.");
+        });
+    }
+    
+    if (signupForm) {
+        signupForm.addEventListener('submit', (event) => {
+            event.preventDefault(); 
+            alert("Sign Up functionality requires a backend and database! This is just the UI.");
+        });
+    }
+
+});
+</script>
+
+<style>/* Auth Modal Pop-up Styles */
+#auth-modal-overlay.visible,
+#auth-modal.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#auth-modal.visible {
+    transform: translate(-50%, -50%) scale(1);
+}</style>
+
+<nav id="mobile-nav" class="fixed bottom-0 left-0 w-full h-16 bg-white border-t border-gray-200 shadow-lg z-[1000] flex justify-around items-center md:hidden">
+
+    <a href="#hero-section" class="flex flex-col justify-center items-center text-center text-brand-orange w-1/4" aria-label="Home">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z"/>
+        </svg>
+        <span class="text-xs font-medium font-display">Home</span>
+    </a>
+
+    <a href="#tour-packages" class="flex flex-col justify-center items-center text-center text-brand-dark hover:text-brand-orange transition-colors w-1/4" aria-label="Tour Packages">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        <span class="text-xs font-medium font-display">Tours</span>
+    </a>
+
+    <a href="#things-to-do" class="flex flex-col justify-center items-center text-center text-brand-dark hover:text-brand-orange transition-colors w-1/4" aria-label="Explore Map">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 01.553-.894L9 2m0 18l6-3m-6 3V2m6 15l5.447 2.724A1 1 0 0021 16.382V5.618a1 1 0 00-.553-.894L15 2m0 15V2m-6 0l6-3m-6 3l6 3"></path>
+        </svg>
+        <span class="text-xs font-medium font-display">Map</span>
+    </a>
+
+    <a href="#contact-section" class="flex flex-col justify-center items-center text-center text-brand-dark hover:text-brand-orange transition-colors w-1/4" aria-label="Contact Us">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+        </svg>
+        <span class="text-xs font-medium font-display">Inquire</span>
+    </a>
+</nav>
+
 </body>
 </html>

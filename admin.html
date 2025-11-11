@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Everyday Summer</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Poppins Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- ===== ALUTH LIBRARIES DEKA (PDF EXPORT EKA SANDAHAMA) ===== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <script>
+    // Custom Tailwind Config
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'brand-dark': '#262c49', 
+                    'brand-darker': '#1f243d',
+                    'brand-light': '#a1a9c4', 
+                    'brand-lighter': '#d0d6e8',
+                    'brand-orange': '#F97316', // <-- Weradda thibbe methana (stray 'a' ain kala)
+                },
+                fontFamily: {
+                    'sans': ['Poppins', 'sans-serif'],
+                }
+            }
+        }
+    }
+    </script>
+    <style>
+        /* Login screen form styles */
+        .form-label { display: block; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 500; color: #4A5568; }
+        .form-input { width: 100%; border: 1px solid #CBD5E0; background-color: white; padding: 0.75rem 1rem; border-radius: 0.5rem; color: #1a202c; }
+        .form-input:focus { outline: none; border-color: #F97316; box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.4); }
+        
+        /* Dark Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #1f243d; }
+        ::-webkit-scrollbar-thumb { background: #F97316; border-radius: 6px; }
+        ::-webkit-scrollbar-thumb:hover { background: #eA580C; }
+        
+        /* Sidebar Link Active Style */
+        .sidebar-link.active, .mobile-nav-link.active {
+            background-color: #F97316;
+            color: white;
+            font-weight: 600;
+        }
+        /* Admin content eka mobile eke yatin kapenne nathi wenna */
+        .content-wrapper {
+            padding-bottom: 80px; /* Mobile nav bar eke usata */
+        }
+
+        /* ===== ALUTH STYLES (PDF EKA BLACK & WHITE HADANNA) ===== */
+        .is-printing {
+            background: white !important;
+            color: black !important;
+        }
+        .is-printing * {
+            color: black !important;
+            border-color: #ccc !important;
+        }
+        .is-printing thead {
+            background-color: #eee !important;
+        }
+        .is-printing span {
+            color: black !important;
+            font-weight: normal !important;
+            background-color: transparent !important;
+        }
+    </style>
+</head>
+<body class="bg-white font-sans">
+
+    <!-- ===== 1. LOGIN SCREEN (Wenasak Ne) ===== -->
+    <div id="login-screen" class="flex items-center justify-center min-h-screen bg-gray-100">
+        <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-xl">
+            <img src="https://i.ibb.co/pr9BB797/Untitled-design-25.png" alt="Logo" class="w-20 h-20 mx-auto">
+            <h2 class="text-3xl font-bold text-center text-gray-800 font-sans">Admin Panel Login</h2>
+            <form id="admin-login-form" class="space-y-6">
+                <div><label for="admin-email" class="form-label">Email</label><input id="admin-email" type="email" required class="form-input" placeholder="admin@email.com"></div>
+                <div><label for="admin-pass" class="form-label">Password</label><input id="admin-pass" type="password" required class="form-input" placeholder="••••••••"></div>
+                <button type="submit" class="w-full bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600">Login</button>
+                <p id="login-error" class="text-red-500 text-sm text-center hidden"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== 2. DASHBOARD SCREEN (Aluth Export Button ekka) ===== -->
+    <div id="dashboard-screen" class="hidden h-screen flex bg-brand-dark text-brand-light">
+        
+        <!-- Sidebar (Desktop) -->
+        <aside class="hidden md:flex w-64 bg-brand-darker flex-shrink-0 flex-col shadow-lg">
+            <div class="h-20 flex items-center justify-center border-b border-gray-700">
+                <img src="https://i.ibb.co/pr9BB797/Untitled-design-25.png" alt="Logo" class="w-12 h-12">
+            </div>
+            <nav class="flex-1 p-4 space-y-2">
+                <p class="px-4 text-xs font-semibold uppercase text-gray-500 tracking-wider">Menu</p>
+                <button data-tab="dashboard" class="sidebar-link tab-button active flex items-center w-full px-4 py-3 rounded-lg transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6-4a1 1 0 001-1v-1a1 1 0 10-2 0v1a1 1 0 001 1z"></path></svg>
+                    Dashboard
+                </button>
+                <button data-tab="inquiries" class="sidebar-link tab-button flex items-center w-full px-4 py-3 rounded-lg transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    Inquiries
+                </button>
+            </nav>
+        </aside>
+        
+        <!-- Main Content Area (Header + Content) -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            
+            <!-- Header (Udin bar eka) -->
+            <header class="h-20 bg-brand-darker flex-shrink-0 flex items-center justify-between px-4 md:px-6 border-b border-gray-700">
+                <!-- Search & Export -->
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <svg class="w-5 h-5 text-brand-light absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <input type="text" placeholder="Search..." class="bg-brand-dark border border-gray-700 rounded-full py-2 pl-10 pr-4 text-brand-lighter focus:outline-none focus:border-brand-orange w-40 md:w-64">
+                    </div>
+                    
+                    <!-- ===== ALUTH PDF EXPORT BUTTON EKA ===== -->
+                    <button id="export-pdf-button" class="hidden md:flex items-center gap-2 bg-brand-orange text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-600">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd"></path></svg>
+                        Export PDF
+                    </button>
+                </div>
+                
+                <!-- Profile Dropdown -->
+                <div class="relative">
+                    <button id="profile-menu-button" class="flex items-center gap-3">
+                        <span class="hidden md:inline text-sm font-medium text-brand-lighter" id="admin-email-display">admin@email.com</span>
+                        <img class="w-10 h-10 rounded-full border-2 border-brand-orange" src="https://i.ibb.co/3Yv8z6XY/Everyday-1080-x-1100-px-3.png" alt="Admin Profile">
+                    </button>
+                    <div id="profile-menu-dropdown" class="absolute right-0 mt-3 w-48 bg-brand-darker rounded-lg shadow-xl z-20 hidden transform transition-all duration-150 scale-95 opacity-0">
+                        <button id="logout-button" class="w-full text-left block px-4 py-3 text-sm font-medium text-red-400 hover:bg-brand-dark hover:text-red-300">
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content (Scrollable Area) -->
+            <!-- 'content-wrapper' class eka add kala mobile bottom padding sadaha -->
+            <main class="flex-1 overflow-y-auto p-4 md:p-6 content-wrapper">
+                
+                <!-- Page: Dashboard -->
+                <div id="page-dashboard" class="tab-content">
+                    <!-- ... (Stat cards thiyena thana wenasak ne) ... -->
+                    <h2 class="text-3xl font-bold text-white mb-6">Dashboard</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-brand-darker p-6 rounded-lg shadow-lg flex items-center gap-5">
+                            <div class="flex-shrink-0 bg-brand-orange rounded-full p-4"><svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div>
+                            <div><p class="text-sm font-medium text-brand-light">Total Inquiries</p><p id="stat-total-inquiries" class="text-4xl font-bold text-white">0</p></div>
+                        </div>
+                        <div class="bg-brand-darker p-6 rounded-lg shadow-lg flex items-center gap-5">
+                            <div class="flex-shrink-0 bg-green-500 rounded-full p-4"><svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>
+                            <div><p class="text-sm font-medium text-brand-light">Inquiries Today</p><p id="stat-today-inquiries" class="text-4xl font-bold text-white">0</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Content: Inquiries Table -->
+                <div id="page-inquiries" class="tab-content hidden">
+                    
+                    <!-- ===== ALUTH FILTERS HA EXPORT BUTTON EKA ===== -->
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                        <h2 class="text-3xl font-bold text-white flex-shrink-0">All Inquiries</h2>
+                        
+                        <!-- Filter & Export Controls -->
+                        <!-- 
+                            ===== WENAS KALA THANAK =====
+                            'grid grid-cols-2' add karala, 'w-1/2' classes 'w-full' kara 
+                        -->
+                        <div class="grid grid-cols-2 gap-2 w-full md:flex md:flex-wrap md:items-center md:justify-end md:w-auto">
+                            <input type="date" id="filter-start-date" title="Start Date" class="bg-brand-dark border border-gray-700 rounded-lg py-2 px-3 text-brand-lighter focus:outline-none focus:border-brand-orange text-sm w-full">
+                            <input type="date" id="filter-end-date" title="End Date" class="bg-brand-dark border border-gray-700 rounded-lg py-2 px-3 text-brand-lighter focus:outline-none focus:border-brand-orange text-sm w-full">
+                            
+                            <button id="filter-btn-month" class="bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium py-2 px-3 rounded-lg w-full">This Month</button>
+                            <button id="filter-btn-year" class="bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium py-2 px-3 rounded-lg w-full">This Year</button>
+                            <button id="filter-btn-clear" class="bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium py-2 px-3 rounded-lg w-full">Clear</button>
+                            
+                            <button id="export-pdf-btn" class="bg-brand-orange hover:bg-orange-600 text-white text-sm font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-2 w-full">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 10-2 0v3a1 1 0 102 0v-3zm2-3a1 1 0 011 1v5a1 1 0 11-2 0v-5a1 1 0 011-1zm4-1a1 1 0 10-2 0v7a1 1 0 102 0V8z" clip-rule="evenodd"></path></svg>
+                                Export PDF
+                            </button>
+                        </div>
+                    </div>
+                    <!-- ===== ALUTH FILTERS IWARY ===== -->
+
+                    <div class="bg-brand-darker rounded-lg shadow-xl overflow-hidden">
+                        <div id="loading-spinner" class="p-8 text-center text-brand-light"><svg class="animate-spin h-8 w-8 text-brand-orange mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><p class="mt-4 font-semibold">Loading Inquiries...</p></div>
+                        
+                        <!-- Table Wrapper -->
+                        <div class="overflow-x-auto">
+                            <!-- ===== ME TABLE EKA THAMAI PDF EKATA GANNE ===== -->
+                            <table class="min-w-full divide-y divide-gray-700 hidden" id="inquiries-table">
+                                <thead class="bg-brand-dark">
+                                    <tr>
+                                        <!-- ===== WENAS KALA THANAK (px-2 kala) ===== -->
+                                        <th class="px-2 py-3 text-left text-xs font-bold text-brand-light uppercase tracking-wider">Selected Plan</th>
+                                        <th class="px-2 py-3 text-left text-xs font-bold text-brand-light uppercase tracking-wider">Name</th>
+                                        <th class="px-2 py-3 text-left text-xs font-bold text-brand-light uppercase tracking-wider">Message</th>
+                                        <th class="hidden md:table-cell px-6 py-3 text-left text-xs font-bold text-brand-light uppercase tracking-wider">Timestamp</th>
+                                        <th class="hidden md:table-cell px-6 py-3 text-left text-xs font-bold text-brand-light uppercase tracking-wider">Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inquiries-table-body" class="bg-brand-darker divide-y divide-gray-700">
+                                    <!-- JS walin data daanna -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="no-inquiries" class="p-8 text-center text-brand-light hidden">No inquiries found.</div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+        <!-- Mobile Navigation Bar -->
+        <nav class="md:hidden fixed bottom-0 left-0 w-full bg-brand-darker border-t border-gray-700 h-20 flex justify-around items-center z-20">
+            <!-- Mobile Tab Buttons -->
+            <button data-tab="dashboard" class="mobile-nav-link tab-button active flex flex-col items-center justify-center text-brand-light transition-colors p-2 w-1/2">
+                <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6-4a1 1 0 001-1v-1a1 1 0 10-2 0v1a1 1 0 001 1z"></path></svg>
+                <span class="text-xs font-medium">Dashboard</span>
+            </button>
+            <button data-tab="inquiries" class="mobile-nav-link tab-button flex flex-col items-center justify-center text-brand-light transition-colors p-2 w-1/2">
+                <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                <span class="text-xs font-medium">Inquiries</span>
+            </button>
+        </nav>
+    </div>
+
+
+    <!-- ===== 3. FIREBASE and APP LOGIC SCRIPT (Aluth PDF function ekka) ===== -->
+    <script type="module">
+        // Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+        // Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAEY_jCqKzub1DdvkhSVGQRK3Gmb9mznn8",
+            authDomain: "everydayinsummer-cb20f.firebaseapp.com",
+            projectId: "everydayinsummer-cb20f",
+            storageBucket: "everydayinsummer-cb20f.firebasestorage.app",
+            messagingSenderId: "1007902148483",
+            appId: "1:1007902148483:web:5a64c17170e845586758b6",
+            measurementId: "G-46FKBXVZFG"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- DOM Elements ---
+        const loginScreen = document.getElementById('login-screen');
+        const dashboardScreen = document.getElementById('dashboard-screen');
+        const loginForm = document.getElementById('admin-login-form');
+        const loginError = document.getElementById('login-error');
+        const profileMenuButton = document.getElementById('profile-menu-button');
+        const profileMenuDropdown = document.getElementById('profile-menu-dropdown');
+        const adminEmailDisplay = document.getElementById('admin-email-display');
+        const logoutButton = document.getElementById('logout-button');
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const inquiriesTable = document.getElementById('inquiries-table');
+        const tableBody = document.getElementById('inquiries-table-body');
+        const noInquiriesMessage = document.getElementById('no-inquiries');
+        const statTotalInquiries = document.getElementById('stat-total-inquiries');
+        const statTodayInquiries = document.getElementById('stat-today-inquiries');
+
+        let inquiriesUnsubscribe = null; 
+        let allInquiries = []; 
+
+        // --- 1. Login Logic ---
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-pass').value;
+            loginError.classList.add('hidden');
+            signInWithEmailAndPassword(auth, email, password)
+                .catch((error) => {
+                    loginError.textContent = "Invalid email or password.";
+                    loginError.classList.remove('hidden');
+                });
+        });
+
+        // --- 2. Logout Logic ---
+        logoutButton.addEventListener('click', () => {
+            signOut(auth).catch((error) => console.error("Logout Error:", error));
+        });
+
+        // --- 3. Profile Dropdown Toggle ---
+        profileMenuButton.addEventListener('click', () => {
+            profileMenuDropdown.classList.toggle('hidden');
+            profileMenuDropdown.classList.toggle('scale-95');
+            profileMenuDropdown.classList.toggle('opacity-0');
+        });
+        
+        // --- 4. Tab Switching Logic (HADALA THIYENNE) ---
+        tabButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                const targetTab = button.dataset.tab;
+                
+                // Okkoma content hide karanna
+                tabContents.forEach(content => content.classList.add('hidden'));
+                
+                // Okkoma buttons (desktop + mobile) inactive karanna
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Target content eka show karanna
+                document.getElementById(`page-${targetTab}`).classList.remove('hidden');
+                
+                // Click karapu eka witharak newei, eka "type" eke okkoma active karanna
+                document.querySelectorAll(`.tab-button[data-tab="${targetTab}"]`).forEach(b => b.classList.add('active'));
+            });
+        });
+
+        // --- 5. Login State Check (HADALA THIYENNE) ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginScreen.classList.add('hidden');
+                dashboardScreen.classList.remove('hidden');
+                adminEmailDisplay.textContent = user.email;
+                fetchInquiries(); 
+            } else {
+                loginScreen.classList.remove('hidden');
+                dashboardScreen.classList.add('hidden');
+                if (inquiriesUnsubscribe) inquiriesUnsubscribe();
+            }
+        });
+        
+        // --- 6. Data Fetch Kirima (HADALA THIYENNE) ---
+        function fetchInquiries() {
+            loadingSpinner.classList.remove('hidden');
+            
+            const q = query(collection(db, "inquiries"), orderBy("timestamp", "desc"));
+
+            inquiriesUnsubscribe = onSnapshot(q, 
+                (querySnapshot) => { // <-- Success Callback
+                    
+                    allInquiries = []; // <-- Master list eka clear karanawa
+                    let todayCount = 0;
+                    const today = new Date().toDateString();
+
+                    querySnapshot.forEach((doc) => {
+                        allInquiries.push(doc.data()); // <-- Master list ekata data danawa
+                    });
+                    
+                    // Data ganana update karanna
+                    statTotalInquiries.textContent = allInquiries.length;
+                    
+                    // Adadawase ganana check karanna
+                    todayCount = allInquiries.filter(inq => 
+                        inq.timestamp && inq.timestamp.toDate().toDateString() === today
+                    ).length;
+                    statTodayInquiries.textContent = todayCount;
+
+                    // Dan table eka render karanna
+                    renderTable(allInquiries);
+
+                    loadingSpinner.classList.add('hidden');
+
+                }, 
+                (error) => { // <-- Error Callback
+                    console.error("Firestore Read Error:", error);
+                    loadingSpinner.innerHTML = `<p class="text-red-500 font-semibold">Error loading data. Check Firestore rules.</p>`;
+                }
+            );
+        }
+
+        // --- 7. ALUTH FUNCTION - Table eka Render kirima ---
+        // Me function eka inquiries array ekak gannawa eka render karanawa
+        function renderTable(inquiries) {
+            tableBody.innerHTML = ''; // Table eka clear karanawa
+            
+            if (inquiries.length === 0) {
+                // Data nathnam
+                inquiriesTable.classList.add('hidden');
+                noInquiriesMessage.classList.remove('hidden');
+            } else {
+                // Data thiyenawanam
+                inquiries.forEach((inquiry) => {
+                    const plan = inquiry.plan || 'N/A';
+                    const isPriceAvailable = plan.includes('$');
+
+                    const row = document.createElement('tr');
+                    const date = inquiry.timestamp ? 
+                        inquiry.timestamp.toDate().toLocaleString('en-UK', { 
+                            year: 'numeric', month: 'short', day: 'numeric', 
+                            hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Colombo' 
+                        })
+                        : 'No Date';
+                    
+                    row.innerHTML = `
+                        <!-- ===== WENAS KALA THANAK (px-2 kala, max-w-xs ain kala) ===== -->
+                        <td class="px-2 py-4 whitespace-nowrap text-sm">
+                            <span class="font-semibold ${isPriceAvailable ? 'text-brand-orange' : 'text-brand-light'}">
+                                ${plan}
+                            </span>
+                        </td>
+                        <td class="px-2 py-4 whitespace-nowrap text-sm text-brand-light">${inquiry.name}</td>
+                        <td class="px-2 py-4 text-sm text-brand-light whitespace-normal break-words">${inquiry.message}</td>
+                        <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm font-medium text-brand-lighter">${date}</td>
+                        <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-brand-light">${inquiry.email}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+                inquiriesTable.classList.remove('hidden');
+                noInquiriesMessage.classList.add('hidden');
+            }
+        }
+
+        // --- 8. ALUTH LOGIC - Filters ---
+        const startDateInput = document.getElementById('filter-start-date');
+        const endDateInput = document.getElementById('filter-end-date');
+
+        // Date inputs walin filter kirima
+        function applyDateFilter() {
+            const start = startDateInput.value ? new Date(startDateInput.value + 'T00:00:00') : null;
+            const end = endDateInput.value ? new Date(endDateInput.value + 'T23:59:59') : null;
+
+            if (start && end && end < start) {
+                alert("End date must be after start date.");
+                return;
+            }
+
+            const filteredInquiries = allInquiries.filter(inq => {
+                if (!inq.timestamp) return false;
+                const inqDate = inq.timestamp.toDate();
+                
+                if (start && inqDate < start) return false;
+                if (end && inqDate > end) return false;
+                return true;
+            });
+            renderTable(filteredInquiries);
+        }
+        
+        startDateInput.addEventListener('change', applyDateFilter);
+        endDateInput.addEventListener('change', applyDateFilter);
+
+        // "This Month" button
+        document.getElementById('filter-btn-month').addEventListener('click', () => {
+            const now = new Date();
+            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+
+            startDateInput.value = firstDay.toISOString().split('T')[0];
+            endDateInput.value = lastDay.toISOString().split('T')[0];
+            applyDateFilter();
+        });
+
+        // "This Year" button
+        document.getElementById('filter-btn-year').addEventListener('click', () => {
+            const now = new Date();
+            const firstDay = new Date(now.getFullYear(), 0, 1);
+            const lastDay = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
+
+            startDateInput.value = firstDay.toISOString().split('T')[0];
+            endDateInput.value = lastDay.toISOString().split('T')[0];
+            applyDateFilter();
+        });
+
+        // "Clear" button
+        document.getElementById('filter-btn-clear').addEventListener('click', () => {
+            startDateInput.value = '';
+            endDateInput.value = '';
+            renderTable(allInquiries); // Okkoma data aye pennanna
+        });
+
+
+        // --- 9. ALUTH LOGIC - PDF Export ---
+        // PDF button eka desktop header eken ganna
+        const pdfButtonDesktop = document.getElementById('export-pdf-button');
+        // PDF button eka Inquiries tab eken ganna
+        const pdfButtonInquiriesTab = document.getElementById('export-pdf-btn');
+
+        function handlePdfExport(event) {
+            const { jsPDF } = window.jspdf;
+            const tableToPrint = document.getElementById('inquiries-table');
+            const exportButton = event.currentTarget; // Click karapu button eka
+            const originalButtonText = exportButton.innerHTML;
+
+            // Button eka 'Loading' state ekata danna
+            exportButton.disabled = true;
+            exportButton.innerHTML = 'Exporting...';
+
+            // Table ekata "is-printing" class eka danna (B&W karanna)
+            tableToPrint.classList.add('is-printing');
+
+            html2canvas(tableToPrint, {
+                scale: 2, 
+                useCORS: true,
+                width: tableToPrint.scrollWidth, 
+                height: tableToPrint.scrollHeight 
+            }).then(canvas => {
+                tableToPrint.classList.remove('is-printing');
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const imgWidth = canvas.width;
+                const imgHeight = canvas.height;
+                const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+                const imgX = (pdfWidth - imgWidth * ratio) / 2;
+                const imgY = 10; 
+                pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+                pdf.save('inquiries-report.pdf');
+            }).catch(err => {
+                console.error("Error exporting PDF:", err);
+                alert("Error exporting PDF. Please try again.");
+            }).finally(() => {
+                tableToPrint.classList.remove('is-printing');
+                exportButton.disabled = false;
+                exportButton.innerHTML = originalButtonText;
+            });
+        }
+        
+        // Button dekataම eka function eka call karanna
+        pdfButtonDesktop.addEventListener('click', handlePdfExport);
+        pdfButtonInquiriesTab.addEventListener('click', handlePdfExport);
+
+    </script>
+</body>
+</html>
