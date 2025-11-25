@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Everyday In Summer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="https://i.ibb.co/pr9BB797/Untitled-design-25.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'brand-orange': '#F97316', 
+                    'brand-dark': '#1a202c', 
+                    'brand-white': '#F7FAFC', 
+                },
+                fontFamily: {
+                    'display': ['Poppins', 'sans-serif'], 
+                    'body': ['Georgia', 'serif'], 
+                }
+            }
+        }
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Animation for the Success Tick */
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            70% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .success-icon-anim {
+            animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+        }
+    </style>
+</head>
+<body class="bg-brand-white font-body text-brand-dark flex flex-col min-h-screen">
+
+    <header class="fixed w-full top-0 z-50 bg-brand-dark shadow-md">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <a href="index.html" class="flex items-center gap-2">
+                <img src="https://i.ibb.co/pr9BB797/Untitled-design-25.png" alt="Logo" class="h-8 w-auto"> 
+                <span class="text-white text-xs md:text-sm font-bold tracking-widest uppercase">Everyday In Summer</span>
+            </a>
+            <a href="index.html" class="text-white hover:text-brand-orange transition-colors font-medium text-sm">← Back to Home</a>
+        </div>
+    </header>
+<section class="relative h-[30vh] md:h-[40vh] flex items-center justify-center bg-brand-dark overflow-hidden mt-16">
+        
+        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+            <iframe
+                class="absolute top-1/2 left-1/2 min-w-full min-h-full w-[178vh] h-[100vw] -translate-x-1/2 -translate-y-1/2 opacity-60"
+                src="https://www.youtube.com/embed/h4gjQSvwDX8?autoplay=1&mute=1&loop=1&playlist=h4gjQSvwDX8&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&enablejsapi=1"
+                title="Sri Lanka Video"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <div class="absolute inset-0 bg-black/30 z-0"></div>
+
+        <div class="relative z-10 text-center text-white px-4">
+            <h1 class="text-4xl md:text-6xl font-display font-bold mb-2 drop-shadow-lg">Contact Us</h1>
+            <p class="text-base md:text-xl font-light text-gray-100 drop-shadow-md">Plan your dream vacation with us</p>
+        </div>
+    </section>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('contact-video', {
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            const soundBtn = document.getElementById('sound-btn');
+            const iconMute = document.getElementById('icon-mute');
+            const iconUnmute = document.getElementById('icon-unmute');
+
+            soundBtn.addEventListener('click', function() {
+                if (player.isMuted()) {
+                    player.unMute(); // Unmute කරනවා
+                    iconMute.classList.add('hidden');
+                    iconUnmute.classList.remove('hidden');
+                } else {
+                    player.mute(); // Mute කරනවා
+                    iconMute.classList.remove('hidden');
+                    iconUnmute.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+
+    <main class="flex-grow py-10 md:py-20">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16">
+                
+                <div class="order-2 lg:order-1">
+                    <h2 class="text-2xl md:text-3xl font-display font-bold text-brand-dark mb-6 text-center lg:text-left">Get in Touch</h2>
+                    <p class="text-gray-600 mb-8 leading-relaxed text-center lg:text-left">
+                        Have questions? We are here to help you plan the perfect Sri Lankan adventure.
+                    </p>
+
+                    <div class="space-y-4 md:space-y-6">
+                        <div class="flex items-start gap-4 p-4 md:p-6 bg-white rounded-lg shadow-sm border border-gray-100">
+                            <div class="bg-orange-100 p-3 rounded-full text-brand-orange flex-shrink-0">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-brand-dark">Call / WhatsApp</h3>
+                                <p class="text-gray-600 text-sm">Mr. Sahan Wimalawangsa</p>
+                                <a href="https://wa.me/393513389757" class="text-brand-orange font-semibold hover:underline block mt-1">+39 351 338 9757</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4 p-4 md:p-6 bg-white rounded-lg shadow-sm border border-gray-100">
+                            <div class="bg-orange-100 p-3 rounded-full text-brand-orange flex-shrink-0">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-brand-dark">Email Us</h3>
+                                <a href="mailto:everydaysummerinsrilanka@gmail.com" class="text-brand-orange font-semibold hover:underline break-all text-sm md:text-base">everydaysummerinsrilanka@gmail.com</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4 p-4 md:p-6 bg-white rounded-lg shadow-sm border border-gray-100">
+                            <div class="bg-orange-100 p-3 rounded-full text-brand-orange flex-shrink-0">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-brand-dark">Location</h3>
+                                <p class="text-gray-600 text-sm md:text-base">No.159, Marathugoda North,<br>Kandy, Sri Lanka.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-100 order-1 lg:order-2">
+                    <h3 class="text-2xl font-display font-bold text-brand-dark mb-6">Send a Message</h3>
+                    
+                    <form id="firebaseContactForm">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
+                                <input type="text" id="c-name" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-brand-orange outline-none bg-gray-50" placeholder="Your Name">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Email Address</label>
+                                <input type="email" id="c-email" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-brand-orange outline-none bg-gray-50" placeholder="Your Email">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Message</label>
+                                <textarea id="c-message" rows="5" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-brand-orange outline-none bg-gray-50" placeholder="How can we help you?"></textarea>
+                            </div>
+                            <button type="submit" id="submitBtn" class="w-full bg-brand-orange text-white font-bold py-4 rounded-lg hover:bg-orange-600 transition-colors shadow-lg mt-2 flex justify-center items-center gap-2">
+                                Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <div id="success-overlay" class="fixed inset-0 bg-white z-[9999] hidden flex-col items-center justify-center transition-all duration-300">
+        <div class="text-center p-8">
+            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 success-icon-anim">
+                <i class="fas fa-check text-5xl text-green-500"></i>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-brand-dark mb-2">Message Sent!</h2>
+            <p class="text-gray-500 text-lg">We will contact you soon.</p>
+            <p class="text-gray-400 text-sm mt-8">Redirecting to home...</p>
+        </div>
+    </div>
+
+    <footer class="bg-brand-dark text-white py-6 border-t border-gray-700 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-400 text-sm">&copy; 2025 Everyday Summer In Sri Lanka.</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        // Import Firebase Functions
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+        // Firebase Configuration (Same as admin.html)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAEY_jCqKzub1DdvkhSVGQRK3Gmb9mznn8",
+            authDomain: "everydayinsummer-cb20f.firebaseapp.com",
+            projectId: "everydayinsummer-cb20f",
+            storageBucket: "everydayinsummer-cb20f.firebasestorage.app",
+            messagingSenderId: "1007902148483",
+            appId: "1:1007902148483:web:5a64c17170e845586758b6",
+            measurementId: "G-46FKBXVZFG"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Elements
+        const contactForm = document.getElementById('firebaseContactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successOverlay = document.getElementById('success-overlay');
+
+        // Form Submit Handler
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // 1. Get Values
+            const name = document.getElementById('c-name').value;
+            const email = document.getElementById('c-email').value;
+            const message = document.getElementById('c-message').value;
+
+            // 2. Button Loading State
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
+
+            try {
+                // 3. Send to Firestore (Admin Panel eke "inquiries" collection ekata)
+                await addDoc(collection(db, "inquiries"), {
+                    name: name,
+                    email: email,
+                    message: message,
+                    plan: "Website Contact Form", // Admin panel eke 'Plan' column ekata wetenne meka
+                    timestamp: serverTimestamp() // Current Time
+                });
+
+                // 4. Show Success Animation
+                successOverlay.classList.remove('hidden');
+                successOverlay.classList.add('flex');
+                contactForm.reset();
+
+                // 5. Redirect after 3 seconds
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 3000);
+
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert("Something went wrong. Please try again.");
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
