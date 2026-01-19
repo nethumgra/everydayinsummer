@@ -9,6 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="icon" href="https://i.ibb.co/pr9BB797/Untitled-design-25.png">
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap" rel="stylesheet">
     <script>
     tailwind.config = {
         theme: {
@@ -23,6 +24,7 @@
                 fontFamily: {
                     'display': ['Poppins', 'sans-serif'], // For headings
                     'body': ['Georgia', 'serif'], // *** 'Manrope' වෙනුවට 'Georgia' යෙදුවා ***
+                    'script': ['Pinyon Script', 'cursive'],
                 },
                 keyframes: {
                     // Existing keyframes
@@ -803,7 +805,335 @@ document.addEventListener('DOMContentLoaded', () => {
     heroObserver.observe(heroSection);
 });
 </script>
+<section id="tour-packages" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
 
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+
+            <div>
+                <div class="mb-12">
+                    <h2 class="text-5xl font-display font-bold text-brand-dark">Our Signature Packages</h2>
+                    <p class="text-lg text-gray-600 mt-4 max-w-2xl font-body">
+                        Choose the journey that's perfect for you. Contact us to customize any tour.
+                    </p>
+                </div>
+
+                <div class="relative">
+                    <div class="swiper-container tour-packages-slider relative overflow-hidden rounded-lg shadow-lg border border-gray-200">
+                        <div class="swiper-wrapper">
+                            
+                            <div class="swiper-slide" data-title="14 Day Luxury">
+                                <div class="bg-white overflow-hidden flex flex-col h-full">
+                                    <div class="p-6 border-b border-gray-200">
+                                        <h3 class="text-3xl font-display font-bold text-brand-dark">14 Day Luxury Tour</h3>
+                                        <p class="text-lg text-brand-orange font-semibold mt-1 font-body">5 Star & Small Luxury Boutique Hotels</p>
+                                    </div>
+                                    <div class="p-6 flex-grow font-body">
+                                        <p class="text-4xl font-display font-bold text-brand-dark">€5500</p>
+                                        <p class="text-gray-600 mb-4">per person</p>
+                                        <p class="text-xl text-gray-700 font-semibold">"With all Meals - FB Basis"</p>
+                                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                                            <li>14-day duration</li>
+                                            <li>All meals included (Full Board)</li>
+                                            <li>Luxury transport included</li>
+                                        </ul>
+                                    </div>
+                                    <div class="p-6 bg-gray-50">
+                                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
+                                            Inquire Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="swiper-slide" data-title="14 Day Premium">
+                                <div class="bg-white overflow-hidden flex flex-col h-full">
+                                    <div class="p-6 border-b border-gray-200">
+                                        <h3 class="text-3xl font-display font-bold text-brand-dark">14 Day Premium Tour</h3>
+                                        <p class="text-lg text-brand-orange font-semibold mt-1 font-body">4 Star and 5 Star Hotels</p>
+                                    </div>
+                                    <div class="p-6 flex-grow font-body">
+                                        <p class="text-4xl font-display font-bold text-brand-dark">€4500</p>
+                                        <p class="text-gray-600 mb-4">per person</p>
+                                        <p class="text-xl text-gray-700 font-semibold">"With all Meals - FB Basis"</p>
+                                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                                            <li>14-day duration</li>
+                                            <li>All meals included (Full Board)</li>
+                                            <li>Luxury transport included</li>
+                                        </ul>
+                                    </div>
+                                    <div class="p-6 bg-gray-50">
+                                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
+                                            Inquire Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="swiper-slide" data-title="10 or 12 Day">
+                                <div class="bg-white overflow-hidden flex flex-col h-full">
+                                    <div class="p-6 border-b border-gray-200">
+                                        <h3 class="text-3xl font-display font-bold text-brand-dark">10 or 12 Day Tour</h3>
+                                        <p class="text-lg text-brand-orange font-semibold mt-1 font-body">4 Star Hotels</p>
+                                    </div>
+                                    <div class="p-6 flex-grow font-body">
+                                        <p class="text-4xl font-display font-bold text-brand-dark">€3500</p>
+                                        <p class="text-gray-600 mb-4">per person</p>
+                                        <p class="text-xl text-gray-700 font-semibold">"FB and HB Basis"</p>
+                                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                                            <li>10 to 12-day duration</li>
+                                            <li>Full Board & Half Board meals</li>
+                                            <li>Covers Kandy, Nuwara Eliya, Ella</li>
+                                        </ul>
+                                    </div>
+                                    <div class="p-6 bg-gray-50">
+                                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
+                                            Inquire Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="swiper-slide" data-title="08 or 10 Day">
+                                <div class="bg-white overflow-hidden flex flex-col h-full">
+                                    <div class="p-6 border-b border-gray-200">
+                                        <h3 class="text-3xl font-display font-bold text-brand-dark">08 or 10 Day Tour</h3>
+                                        <p class="text-lg text-brand-orange font-semibold mt-1 font-body">4 Star Hotels</p>
+                                    </div>
+                                    <div class="p-6 flex-grow font-body">
+                                        <p class="text-4xl font-display font-bold text-brand-dark">€2500</p>
+                                        <p class="text-gray-600 mb-4">per person</p>
+                                        <p class="text-xl text-gray-700 font-semibold">"HB Basis"</p>
+                                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                                            <li>8 to 10-day duration</li>
+                                            <li>Half Board meals</li>
+                                            <li>Covers Sigiriya, Kandy, Ella</li>
+                                        </ul>
+                                    </div>
+                                    <div class="p-6 bg-gray-50">
+                                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
+                                            Inquire Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="swiper-slide" data-title="VIP Helicopter">
+                                <div class="bg-white overflow-hidden flex flex-col h-full">
+                                    <div class="p-6 border-b border-gray-200">
+                                        <h3 class="text-3xl font-display font-bold text-brand-dark">VIP Helicopter Tour</h3>
+                                        <p class="text-lg text-brand-orange font-semibold mt-1 font-body">08 or 10 Days - Sky by Helicopters</p>
+                                    </div>
+                                    <div class="p-6 flex-grow font-body">
+                                        <p class="text-4xl font-display font-bold text-brand-dark">€10,000</p>
+                                        <p class="text-gray-600 mb-4">per person</p>
+                                        <p class="text-xl text-gray-700 font-semibold">Suites Rooms Only - FB Basis</p>
+                                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                                            <li>Travel by Helicopter</li>
+                                            <li>Suite Rooms only</li>
+                                            <li>All meals included (Full Board)</li>
+                                            <li>Exclusive VIP experience</li>
+                                        </ul>
+                                    </div>
+                                    <div class="p-6 bg-gray-50">
+                                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
+                                            Inquire Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                    <div class="swiper-pagination-custom mt-8 flex justify-center flex-wrap gap-3"></div>
+
+                    <div class="swiper-button-prev !left-[-20px] !right-auto !w-10 !h-10 rounded-full !bg-white border border-gray-200 shadow-md flex items-center justify-center transform -translate-y-1/2 top-1/2"></div>
+                    <div class="swiper-button-next !right-[-20px] !left-auto !w-10 !h-10 rounded-full !bg-white border border-gray-200 shadow-md flex items-center justify-center transform -translate-y-1/2 top-1/2"></div>
+                </div>
+            </div>
+
+            <div class="w-full">
+                <img src="https://i.ibb.co/5xYXKwpn/AYUBOWAN-SRI-LANKA-700-x-500-px.png" 
+                     alt="Scenic Sri Lankan train tour" 
+                     class="w-full h-auto rounded-lg lg:sticky top-28">
+            </div>
+
+        </div> 
+        
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+    /* Swiper මගින් හදන bullet එකට default style අයින් කරනවා */
+    .swiper-pagination-custom .swiper-pagination-bullet {
+        width: auto;
+        height: auto;
+        background: transparent;
+        opacity: 1;
+        border-radius: 0;
+        margin: 0 !important; /* Swiper ගේ margin අයින් කරන්න */
+    }
+    
+    /* අපේ custom box එකේ transition */
+    .pagination-box {
+        transition: all 0.3s ease;
+    }
+    
+    /* Active වෙන box එකට මේ style එක apply වෙනවා */
+    .swiper-pagination-custom .swiper-pagination-bullet-active .pagination-box {
+        border-color: #F97316; /* brand-orange */
+        background-color: #FFF7ED; /* orange-50 */
+        color: #EA580C; /* brand-orange-darker */
+        font-weight: 700;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // ඔරිජිනල් slide ටික විතරක් select කරගන්න (loop:true පාවිච්චි කරනවා නම් duplicate අයින් කරන්න)
+    const slides = document.querySelectorAll('.tour-packages-slider .swiper-slide:not(.swiper-slide-duplicate)');
+
+    const swiper = new Swiper('.tour-packages-slider', {
+        
+        // ඔයාට loop වෙන්න ඕන නම් මේක add කරන්න
+        // loop: true, 
+
+        // Navigation buttons
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+
+        // අලුත් Custom Pagination
+        pagination: {
+            el: '.swiper-pagination-custom', // අපේ අලුත් container එක
+            clickable: true,
+            
+            // හැම bullet එකක්ම custom HTML එකක් විදිහට හදන function එක
+            renderBullet: function (index, className) {
+                // 'className' එක Swiper එකෙන් එන්නේ 'swiper-pagination-bullet'
+                
+                // අර slide එකෙන් data-title එක ගන්නවා
+                const title = slides[index] ? slides[index].getAttribute('data-title') : `Package ${index + 1}`;
+                
+                // අපේ custom box එකේ HTML එක
+                return `
+                    <div class="${className}">
+                        <div class="pagination-box w-32 h-20 p-2 border rounded-lg 
+                                    flex items-center justify-center text-center 
+                                    text-xs font-body
+                                    border-gray-300 bg-white text-gray-700 font-medium
+                                    hover:border-brand-orange hover:bg-orange-50">
+                            ${title}
+                        </div>
+                    </div>
+                `;
+            }
+        },
+    });
+});
+</script>
+<section id="specialty-tours" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+
+            <div class="w-full order-2 lg:order-1">
+                <img src="https://i.ibb.co/TB4SRZNM/EVERYDAY-IN-SUMMER-2.png"
+                     alt="Specialty tours in Sri Lanka"
+                     class="w-full h-auto rounded-lg">
+            </div>
+
+            <div class="order-1 lg:order-2">
+                <div class="mb-10 text-center lg:text-left">
+                    <h2 class="text-5xl font-body font-bold text-brand-dark">Theme Journies</h2>
+                    <p class="text-lg text-gray-600 mt-3 max-w-xl mx-auto lg:mx-0 font-body">
+                        Crafted for your unique interests and special moments.
+                    </p>
+                </div>
+
+                <div class="space-y-8 max-w-md mx-auto lg:mx-0">
+                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-3xl font-body font-bold text-brand-dark">Paradise Of Honeymooners</h3>
+                            <p class="text-md text-brand-orange font-semibold mt-1 font-body">For Anniversaries or any special Romance</p>
+                        </div>
+                        <div class="p-6 flex-grow font-body">
+                            <p class="text-4xl font-display font-bold text-brand-dark">€3000+</p>
+                            <p class="text-gray-600 mb-4">per person, onwards</p>
+                            <p class="text-gray-700 font-semibold">"Tailormade as you wish on your very special days…"</p>
+                        </div>
+                        <div class="p-6 bg-gray-50">
+                            <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
+                                Contact Us for Details
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-3xl font-body font-bold text-brand-dark">Meditation & Yoga Tour</h3>
+                            <p class="text-md text-brand-orange font-semibold mt-1 font-body">Health and Wealth Tour</p>
+                        </div>
+                        <div class="p-6 flex-grow font-body">
+                            <p class="text-4xl font-display font-bold text-brand-dark">€2500+</p>
+                            <p class="text-gray-600 mb-4">Starting price, based on preference</p>
+                            <p class="text-gray-700 font-semibold">A journey focused on meditation, yoga, health, and wealth.</p>
+                        </div>
+                        <div class="p-6 bg-gray-50">
+                            <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
+                                Contact Us for Details
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<style>
+    /* Swiper Custom Styles */
+    .swiper-pagination-bullet-active {
+      background-color: #F97316 !important; /* brand-orange */
+    }
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: #F97316 !important; /* brand-orange */
+      transform: scale(0.7); /* Arrow size podi karanna */
+    }
+    .swiper-slide {
+        height: auto; 
+    }
+
+    /* ===== Slider Attention Animation ===== */
+    @keyframes pulse-shadow {
+        0% {
+            box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); /* brand-orange 40% opacity */
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); /* fade out */
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
+        }
+    }
+    
+    .tour-packages-slider {
+        /* Animation eka slider ekata apply kireema */
+        animation: pulse-shadow 2.5s infinite;
+    }
+
+    /* User mouse eka slider eka uda thiyaddi animation eka nawaththamu */
+    .tour-packages-slider:hover {
+        animation: none;
+    }
+</style>
 <section id="sri-lankan-hospitality" class="py-24 bg-brand-white">
     <div class="container mx-auto px-4">
         <div class="text-left mb-8 md:mb-16">
@@ -840,7 +1170,7 @@ document.addEventListener('DOMContentLoaded', () => {
                          <svg class="w-10 h-10 mx-auto text-brand-orange mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                            <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m-7.5-2.962a3.75 3.75 0 015.968 0 3.75 3.75 0 01-5.968 0zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span class="text-3xl font-bold font-display text-brand-dark" data-target="10000000">0</span>
+                        <span class="text-3xl font-bold font-display text-brand-dark" data-target="2000000">0</span>
                         <p class="text-sm text-gray-500 font-medium">Happy Travelers</p>
                     </div>
                 </div>
@@ -1428,7 +1758,7 @@ Beyond its religious importance, the temple plays a vital role in Sri Lankan her
     </div>
 
     <div class="mt-8 pt-6 border-t border-gray-200">
-        <h4 class="text-2xl font-display font-semibold mb-4 text-brand-dark">Your Tour Plan at a Glance</h4>
+        <h4 class="text-7xl font-script font-bold mb-4 text-brand-dark">Your Tour</h4>
         <ul class="space-y-3 text-gray-700 list-disc list-inside">
             <li><strong>Day 1:</strong> Arrive and travel to Habarana. You can choose to visit Sigiriya, Anuradhapura, or Polonnaruwa.</li>
             <li><strong>Day 2:</strong> Tour the Sigiriya fortress and enjoy an evening safari at Minneriya or Kaudulla National Park.</li>
@@ -1668,335 +1998,7 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 </style>
 
-<section id="tour-packages" class="py-20 bg-white">
-    <div class="container mx-auto px-4">
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-
-            <div>
-                <div class="mb-12">
-                    <h2 class="text-5xl font-display font-bold text-brand-dark">Our Signature Packages</h2>
-                    <p class="text-lg text-gray-600 mt-4 max-w-2xl font-body">
-                        Choose the journey that's perfect for you. Contact us to customize any tour.
-                    </p>
-                </div>
-
-                <div class="relative">
-                    <div class="swiper-container tour-packages-slider relative overflow-hidden rounded-lg shadow-lg border border-gray-200">
-                        <div class="swiper-wrapper">
-                            
-                            <div class="swiper-slide" data-title="14 Day Luxury">
-                                <div class="bg-white overflow-hidden flex flex-col h-full">
-                                    <div class="p-6 border-b border-gray-200">
-                                        <h3 class="text-3xl font-display font-bold text-brand-dark">14 Day Luxury Tour</h3>
-                                        <p class="text-lg text-brand-orange font-semibold mt-1 font-body">5 Star & Small Luxury Boutique Hotels</p>
-                                    </div>
-                                    <div class="p-6 flex-grow font-body">
-                                        <p class="text-4xl font-display font-bold text-brand-dark">€5500</p>
-                                        <p class="text-gray-600 mb-4">per person</p>
-                                        <p class="text-xl text-gray-700 font-semibold">"With all Meals - FB Basis"</p>
-                                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
-                                            <li>14-day duration</li>
-                                            <li>All meals included (Full Board)</li>
-                                            <li>Luxury transport included</li>
-                                        </ul>
-                                    </div>
-                                    <div class="p-6 bg-gray-50">
-                                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
-                                            Inquire Now
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide" data-title="14 Day Premium">
-                                <div class="bg-white overflow-hidden flex flex-col h-full">
-                                    <div class="p-6 border-b border-gray-200">
-                                        <h3 class="text-3xl font-display font-bold text-brand-dark">14 Day Premium Tour</h3>
-                                        <p class="text-lg text-brand-orange font-semibold mt-1 font-body">4 Star and 5 Star Hotels</p>
-                                    </div>
-                                    <div class="p-6 flex-grow font-body">
-                                        <p class="text-4xl font-display font-bold text-brand-dark">€4500</p>
-                                        <p class="text-gray-600 mb-4">per person</p>
-                                        <p class="text-xl text-gray-700 font-semibold">"With all Meals - FB Basis"</p>
-                                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
-                                            <li>14-day duration</li>
-                                            <li>All meals included (Full Board)</li>
-                                            <li>Luxury transport included</li>
-                                        </ul>
-                                    </div>
-                                    <div class="p-6 bg-gray-50">
-                                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
-                                            Inquire Now
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide" data-title="10 or 12 Day">
-                                <div class="bg-white overflow-hidden flex flex-col h-full">
-                                    <div class="p-6 border-b border-gray-200">
-                                        <h3 class="text-3xl font-display font-bold text-brand-dark">10 or 12 Day Tour</h3>
-                                        <p class="text-lg text-brand-orange font-semibold mt-1 font-body">4 Star Hotels</p>
-                                    </div>
-                                    <div class="p-6 flex-grow font-body">
-                                        <p class="text-4xl font-display font-bold text-brand-dark">€3500</p>
-                                        <p class="text-gray-600 mb-4">per person</p>
-                                        <p class="text-xl text-gray-700 font-semibold">"FB and HB Basis"</p>
-                                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
-                                            <li>10 to 12-day duration</li>
-                                            <li>Full Board & Half Board meals</li>
-                                            <li>Covers Kandy, Nuwara Eliya, Ella</li>
-                                        </ul>
-                                    </div>
-                                    <div class="p-6 bg-gray-50">
-                                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
-                                            Inquire Now
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="swiper-slide" data-title="08 or 10 Day">
-                                <div class="bg-white overflow-hidden flex flex-col h-full">
-                                    <div class="p-6 border-b border-gray-200">
-                                        <h3 class="text-3xl font-display font-bold text-brand-dark">08 or 10 Day Tour</h3>
-                                        <p class="text-lg text-brand-orange font-semibold mt-1 font-body">4 Star Hotels</p>
-                                    </div>
-                                    <div class="p-6 flex-grow font-body">
-                                        <p class="text-4xl font-display font-bold text-brand-dark">€2500</p>
-                                        <p class="text-gray-600 mb-4">per person</p>
-                                        <p class="text-xl text-gray-700 font-semibold">"HB Basis"</p>
-                                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
-                                            <li>8 to 10-day duration</li>
-                                            <li>Half Board meals</li>
-                                            <li>Covers Sigiriya, Kandy, Ella</li>
-                                        </ul>
-                                    </div>
-                                    <div class="p-6 bg-gray-50">
-                                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
-                                            Inquire Now
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide" data-title="VIP Helicopter">
-                                <div class="bg-white overflow-hidden flex flex-col h-full">
-                                    <div class="p-6 border-b border-gray-200">
-                                        <h3 class="text-3xl font-display font-bold text-brand-dark">VIP Helicopter Tour</h3>
-                                        <p class="text-lg text-brand-orange font-semibold mt-1 font-body">08 or 10 Days - Sky by Helicopters</p>
-                                    </div>
-                                    <div class="p-6 flex-grow font-body">
-                                        <p class="text-4xl font-display font-bold text-brand-dark">€10,000</p>
-                                        <p class="text-gray-600 mb-4">per person</p>
-                                        <p class="text-xl text-gray-700 font-semibold">Suites Rooms Only - FB Basis</p>
-                                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
-                                            <li>Travel by Helicopter</li>
-                                            <li>Suite Rooms only</li>
-                                            <li>All meals included (Full Board)</li>
-                                            <li>Exclusive VIP experience</li>
-                                        </ul>
-                                    </div>
-                                    <div class="p-6 bg-gray-50">
-                                        <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
-                                            Inquire Now
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    
-                    <div class="swiper-pagination-custom mt-8 flex justify-center flex-wrap gap-3"></div>
-
-                    <div class="swiper-button-prev !left-[-20px] !right-auto !w-10 !h-10 rounded-full !bg-white border border-gray-200 shadow-md flex items-center justify-center transform -translate-y-1/2 top-1/2"></div>
-                    <div class="swiper-button-next !right-[-20px] !left-auto !w-10 !h-10 rounded-full !bg-white border border-gray-200 shadow-md flex items-center justify-center transform -translate-y-1/2 top-1/2"></div>
-                </div>
-            </div>
-
-            <div class="w-full">
-                <img src="https://i.ibb.co/5xYXKwpn/AYUBOWAN-SRI-LANKA-700-x-500-px.png" 
-                     alt="Scenic Sri Lankan train tour" 
-                     class="w-full h-auto rounded-lg lg:sticky top-28">
-            </div>
-
-        </div> 
-        
-            </div>
-        </div>
-    </div>
-</section>
-<style>
-    /* Swiper මගින් හදන bullet එකට default style අයින් කරනවා */
-    .swiper-pagination-custom .swiper-pagination-bullet {
-        width: auto;
-        height: auto;
-        background: transparent;
-        opacity: 1;
-        border-radius: 0;
-        margin: 0 !important; /* Swiper ගේ margin අයින් කරන්න */
-    }
-    
-    /* අපේ custom box එකේ transition */
-    .pagination-box {
-        transition: all 0.3s ease;
-    }
-    
-    /* Active වෙන box එකට මේ style එක apply වෙනවා */
-    .swiper-pagination-custom .swiper-pagination-bullet-active .pagination-box {
-        border-color: #F97316; /* brand-orange */
-        background-color: #FFF7ED; /* orange-50 */
-        color: #EA580C; /* brand-orange-darker */
-        font-weight: 700;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    }
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    
-    // ඔරිජිනල් slide ටික විතරක් select කරගන්න (loop:true පාවිච්චි කරනවා නම් duplicate අයින් කරන්න)
-    const slides = document.querySelectorAll('.tour-packages-slider .swiper-slide:not(.swiper-slide-duplicate)');
-
-    const swiper = new Swiper('.tour-packages-slider', {
-        
-        // ඔයාට loop වෙන්න ඕන නම් මේක add කරන්න
-        // loop: true, 
-
-        // Navigation buttons
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-
-        // අලුත් Custom Pagination
-        pagination: {
-            el: '.swiper-pagination-custom', // අපේ අලුත් container එක
-            clickable: true,
-            
-            // හැම bullet එකක්ම custom HTML එකක් විදිහට හදන function එක
-            renderBullet: function (index, className) {
-                // 'className' එක Swiper එකෙන් එන්නේ 'swiper-pagination-bullet'
-                
-                // අර slide එකෙන් data-title එක ගන්නවා
-                const title = slides[index] ? slides[index].getAttribute('data-title') : `Package ${index + 1}`;
-                
-                // අපේ custom box එකේ HTML එක
-                return `
-                    <div class="${className}">
-                        <div class="pagination-box w-32 h-20 p-2 border rounded-lg 
-                                    flex items-center justify-center text-center 
-                                    text-xs font-body
-                                    border-gray-300 bg-white text-gray-700 font-medium
-                                    hover:border-brand-orange hover:bg-orange-50">
-                            ${title}
-                        </div>
-                    </div>
-                `;
-            }
-        },
-    });
-});
-</script>
-<section id="specialty-tours" class="py-20 bg-gray-50">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-
-            <div class="w-full order-2 lg:order-1">
-                <img src="https://i.ibb.co/TB4SRZNM/EVERYDAY-IN-SUMMER-2.png"
-                     alt="Specialty tours in Sri Lanka"
-                     class="w-full h-auto rounded-lg">
-            </div>
-
-            <div class="order-1 lg:order-2">
-                <div class="mb-10 text-center lg:text-left">
-                    <h2 class="text-5xl font-body font-bold text-brand-dark">Theme Journies</h2>
-                    <p class="text-lg text-gray-600 mt-3 max-w-xl mx-auto lg:mx-0 font-body">
-                        Crafted for your unique interests and special moments.
-                    </p>
-                </div>
-
-                <div class="space-y-8 max-w-md mx-auto lg:mx-0">
-                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col shadow-md hover:shadow-lg transition-shadow duration-300">
-                        <div class="p-6 border-b border-gray-200">
-                            <h3 class="text-3xl font-body font-bold text-brand-dark">Paradise Of Honeymooners</h3>
-                            <p class="text-md text-brand-orange font-semibold mt-1 font-body">For Anniversaries or any special Romance</p>
-                        </div>
-                        <div class="p-6 flex-grow font-body">
-                            <p class="text-4xl font-display font-bold text-brand-dark">€3000+</p>
-                            <p class="text-gray-600 mb-4">per person, onwards</p>
-                            <p class="text-gray-700 font-semibold">"Tailormade as you wish on your very special days…"</p>
-                        </div>
-                        <div class="p-6 bg-gray-50">
-                            <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
-                                Contact Us for Details
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col shadow-md hover:shadow-lg transition-shadow duration-300">
-                        <div class="p-6 border-b border-gray-200">
-                            <h3 class="text-3xl font-body font-bold text-brand-dark">Meditation & Yoga Tour</h3>
-                            <p class="text-md text-brand-orange font-semibold mt-1 font-body">Health and Wealth Tour</p>
-                        </div>
-                        <div class="p-6 flex-grow font-body">
-                            <p class="text-4xl font-display font-bold text-brand-dark">€2500+</p>
-                            <p class="text-gray-600 mb-4">Starting price, based on preference</p>
-                            <p class="text-gray-700 font-semibold">A journey focused on meditation, yoga, health, and wealth.</p>
-                        </div>
-                        <div class="p-6 bg-gray-50">
-                            <a href="#contact-section" class="block w-full text-center bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-display">
-                                Contact Us for Details
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
-<style>
-    /* Swiper Custom Styles */
-    .swiper-pagination-bullet-active {
-      background-color: #F97316 !important; /* brand-orange */
-    }
-    .swiper-button-next,
-    .swiper-button-prev {
-      color: #F97316 !important; /* brand-orange */
-      transform: scale(0.7); /* Arrow size podi karanna */
-    }
-    .swiper-slide {
-        height: auto; 
-    }
-
-    /* ===== Slider Attention Animation ===== */
-    @keyframes pulse-shadow {
-        0% {
-            box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); /* brand-orange 40% opacity */
-        }
-        70% {
-            box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); /* fade out */
-        }
-        100% {
-            box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
-        }
-    }
-    
-    .tour-packages-slider {
-        /* Animation eka slider ekata apply kireema */
-        animation: pulse-shadow 2.5s infinite;
-    }
-
-    /* User mouse eka slider eka uda thiyaddi animation eka nawaththamu */
-    .tour-packages-slider:hover {
-        animation: none;
-    }
-</style>
 
     <section id="contact-section" class="py-20 bg-white"> <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -2037,7 +2039,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </li>
                         <li class="flex items-center gap-4">
                             <svg class="w-6 h-6 text-brand-orange flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                            <a href="contact.html" class="hover:text-brand-orange transition-colors">everydaysummerinsrilanka@gmail.com</a>
+                            <a href="everydaysummerinsrilanka@gmail.com"class="text-gray-700 hover:text-brand-orange transition-colors">everydaysummerinsrilanka@gmail.com</a>
                         </li>
                         <li class="flex items-start gap-4">
                             <svg class="w-6 h-6 text-brand-orange flex-shrink-0 mt-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -2166,7 +2168,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </li>
                     <li class="flex items-center gap-3">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    <a href="contact.html" class="hover:text-brand-orange transition-colors">everydaysummerinsrilanka@gmail.com</a>
+                        <a href="mailto:contact@everydaySummerinsrilanka" class="hover:text-brand-orange transition-colors">everydaysummerinsrilanka@gmail.com</a>
                     </li>
                 </ul>
             </div>
